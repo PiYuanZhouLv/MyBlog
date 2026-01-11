@@ -2982,6 +2982,8 @@
 
                     if (result) {
                         collectionData = importedData;
+                        collectionData.friendIds = collectionData.friendIds || [];
+                        collectionData.allCollected = collectionData.allCollected || false;
                         saveCollectionData();
                         renderCollectionPage();
                         updateProgressBars();
@@ -3016,7 +3018,9 @@
                 collectionData = {
                     lastUpdate: new Date().toISOString(),
                     version: "1.0",
-                    friends: {}
+                    friends: {},
+                    friendIds: friends.map(i=>i.id),
+                    allCollected: false
                 };
                 saveCollectionData();
                 renderCollectionPage();
