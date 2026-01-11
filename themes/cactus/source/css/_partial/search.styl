@@ -1,0 +1,65 @@
+.search-input
+  padding: 4px 7px
+  width: 100%
+  outline: none
+  .night &
+    border: solid 1px $color-night-accent-3
+  .light &
+    border: solid 1px $color-light-accent-3
+  border-radius: 5px
+  .night &
+    background-color: $color-night-background
+    color: $color-night-text
+  .light &
+    background-color: $color-light-background
+    color: $color-light-text
+  font-size: 1.2rem
+  -webkit-border-radius: 5px
+  -moz-border-radius: 5px
+
+  .night &:focus
+    border: solid 1px $color-night-accent-1
+  .light &:focus
+    border: solid 1px $color-light-accent-1
+
+#search-result
+  ul.search-result-list
+    padding: 0
+    list-style-type: none
+
+  li
+    margin: 2em auto
+
+  a.search-result-title
+    background-image: none
+    .night &
+      color: $color-night-text
+    .light &
+      color: $color-light-text
+    text-transform: capitalize
+    font-weight: bold
+    line-height: 1.2
+
+  p.search-result
+    overflow: hidden
+    margin: .4em auto
+    max-height: 13em
+    text-align: justify
+    font-size: .8em
+
+  em.search-keyword
+    .night &
+      border-bottom: 1px dashed $color-night-link
+      color: $color-night-link
+    .light &
+      border-bottom: 1px dashed $color-light-link
+      color: $color-light-link
+    font-weight: bold
+
+.search-no-result
+  display: none
+  padding-bottom: .5em
+  .night &
+    color: $color-night-text
+  .light &
+    color: $color-light-text

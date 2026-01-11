@@ -1,0 +1,332 @@
+@import "_variables"
+// @import "_colors/" + $colors
+// dark
+$color-night-background = #1d1f21
+$color-night-footer-mobile-1 = lighten($color-night-background, 2%)
+$color-night-footer-mobile-2 = lighten($color-night-background, 10%)
+$color-night-background-code = lighten($color-night-background, 2%)
+$color-night-border = #908d8d
+$color-night-scrollbar = #999
+$color-night-meta = #908d8d
+$color-night-meta-code = #908d8d
+$color-night-link = rgba(212, 128, 170, 1)
+$color-night-text = #c9cacc
+$color-night-accent-3 = #cccccc
+$color-night-accent-2 = #eeeeee
+$color-night-accent-1 = #2bbc8a
+$color-night-quote = #ccffb6
+
+//white
+$color-light-background = #FFFFFF
+$color-light-footer-mobile-1 = darken($color-light-background, 2%)
+$color-light-footer-mobile-2 = darken($color-light-background, 10%)
+$color-light-background-code = darken($color-light-background, 2%)
+$color-light-border = #666
+$color-light-scrollbar = #AAA
+$color-light-meta = #666
+$color-light-meta-code = lighten($color-light-meta, 10%)
+$color-light-link = rgba(212, 128, 170, 1)
+$color-light-text = #383838
+$color-light-accent-3 = #8c8c8c
+$color-light-accent-2 = #383838
+$color-light-accent-1 = #2bbc8a
+$color-light-quote = #2bbc8a
+
+$highlight-night = hexo-config("highlight-night") || "rainbow"
+$highlight-light = hexo-config("highlight-light") || "atelier-cave-light"
+
+@import "_util"
+@import "_mixins"
+@import "_extend"
+@import "_fonts"
+
+global-reset()
+
+*, *:before, *:after
+  box-sizing: border-box
+
+/* Scroll bar */
+/* For Firefox */
+// .night *
+//   scrollbar-color: $color-night-scrollbar transparent
+
+// .light *
+//   scrollbar-color: $color-light-scrollbar transparent
+
+/* For Chrome, Edge, and Safari */
+*::-webkit-scrollbar
+  width: 8px
+  height: 6px
+
+*::-webkit-scrollbar-track
+  background: transparent
+
+*::-webkit-scrollbar-thumb
+  .night &
+    background-color: $color-night-scrollbar
+  .light &
+    background-color: $color-light-scrollbar
+  border-radius: 6px
+
+*::-webkit-scrollbar-thumb:hover
+  .night &
+    background-color: darken($color-night-scrollbar, 20%)
+  .light &
+    background-color: darken($color-light-scrollbar, 20%)
+
+*::-webkit-scrollbar-thumb:active
+  .night &
+    background-color: darken($color-night-scrollbar, 30%)
+  .light &
+    background-color: darken($color-light-scrollbar, 30%)
+
+html
+  margin: 0
+  padding: 0
+  height: 100%
+  .night &
+    border-top: 2px solid $color-night-text
+  .light &
+    border-top: 2px solid $color-light-text
+  -webkit-text-size-adjust: 100%
+  -ms-text-size-adjust: 100%
+
+body
+  margin: 0
+  height: 100%
+  .night &
+    background-color: $color-night-background
+    color: $color-night-text
+  .light &
+    background-color: $color-light-background
+    color: $color-light-text
+  font-weight: 400
+  font-size: $font-size
+  font-family: $font-family-body
+  line-height: $line-height
+  text-rendering: geometricPrecision
+
+  antialias()
+
+  @extend $base-style
+
+.content
+  position: relative
+  display: flex
+  flex-direction: column
+  min-height: 100%
+  overflow-wrap: break-word
+
+  p
+    hyphens(auto)
+
+  code
+    hyphens(manual)
+
+  a
+    .night &
+      color: $color-night-text
+    .light &
+      color: $color-light-text
+    text-decoration: none
+
+    .night &
+      underline(5px, $color-night-text)
+    .light &
+      underline(5px, $color-light-text)
+
+    .night &:hover
+      background-image: linear-gradient(transparent, transparent 4px, $color-night-link 4px, $color-night-link)
+    .light &:hover
+      background-image: linear-gradient(transparent, transparent 4px, $color-light-link 4px, $color-light-link)
+
+  a.icon
+    background: none
+
+    .night &:hover
+      color: $color-night-link
+    .light &:hover
+      color: $color-light-link
+
+  h1 a, .h1 a, h2 a, h3 a, h4 a, h5 a, h6 a
+    background: none
+    color: inherit
+    text-decoration: none
+
+  h1 a:hover, .h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover
+    .night &
+      underline(6px, $color-night-link)
+    .light &
+      underline(6px, $color-light-link)
+
+  h6
+    a
+      background: none
+      color: inherit
+      text-decoration: none
+
+  h6
+    a:hover
+      .night &
+        underline(6px, $color-night-link)
+      .light &
+        underline(6px, $color-light-link)
+
+@media (min-width: 540px)
+  .image-wrap
+    flex-direction: row
+    margin-bottom: 2rem
+
+    .image-block
+      flex: 1 0 35%
+      margin-right: 2rem
+
+    p
+      flex: 1 0 65%
+
+.max-width
+  max-width: $page-width
+
+@media (max-width: 480px)
+  // smaller margins at smaller screen widths
+  .px3
+    padding-right: 1rem
+    padding-left: 1rem
+
+  .my4
+    margin-top: 2rem
+    margin-bottom: 2rem
+
+@media (min-width: 480px)
+  p
+    text-align: justify
+
+@import "_partial/header"
+@import "_partial/post/actions_desktop"
+@import "_partial/post/actions_mobile"
+@import "_partial/index"
+@import "_partial/article"
+@import "_partial/archive"
+@import "_partial/comments"
+@import "_partial/footer"
+@import "_partial/pagination"
+@import "_partial/search"
+@import "_partial/tags"
+@import "_partial/tooltip"
+@import "_partial/categories"
+// Code
+
+.night
+  @import "_highlight/" + $highlight-night
+.light
+  @import "_highlight/" + $highlight-light
+
+pre
+  overflow-x: auto
+  padding: 10px 15px
+  padding-bottom: 0
+  .night &
+    border: 1px dotted $color-night-border
+  .light &
+    border: 1px dotted $color-light-border
+  border-radius: 4px
+  font-size: 13px
+  font-family: $font-family-mono
+  line-height: 22px
+  -webkit-border-radius: 4px
+
+  code
+    display: block
+    padding: 0
+    border: none
+
+code
+  padding: 0 5px
+  .night &
+    border: 1px dotted $color-night-border
+  .light &
+    border: 1px dotted $color-light-border
+  border-radius: 2px
+  -webkit-border-radius: 2px
+
+.highlight
+  overflow-x: auto
+  margin: 1rem 0
+  padding: 10px 15px
+  border-radius: 4px
+  .night &
+    background: $color-night-background-code
+  .light &
+    background: $color-light-background-code
+  font-family: $font-family-mono
+  // color: $color-accent-3
+  -webkit-border-radius: 4px
+
+  figcaption
+    margin: -5px 0 5px
+    .night &
+      color: $color-night-meta-code
+    .light &
+      color: $color-light-meta-code
+    font-size: .9em
+    transform: scale(1)
+
+    a
+      float: right
+      .night &
+        color: $color-night-meta-code
+      .light &
+        color: $color-light-meta-code
+      font-style: italic
+      font-size: .8em
+
+      .night &
+        underline(10px, $color-night-link)
+      .light &
+        underline(10px, $color-light-link)
+
+    a:hover
+      .night &
+        color: lighten($color-night-meta-code, 20%)
+      .light &
+        color: lighten($color-light-meta-code, 20%)
+
+    &:before, content: ""
+      display: table
+
+    &:after
+      clear: both
+
+  &:hover 
+    .btn-copy
+      opacity: 1
+
+  .btn-copy
+    font-size: 1.2rem
+    position: absolute
+    right: 20px
+    opacity: 0
+    transition: opacity 0.2s ease-in
+    .night &:hover
+      color: $color-night-accent-1
+    .light &:hover
+      color: $color-light-accent-1
+
+  pre
+    margin: 0
+    padding: 0
+    border: none
+    background: none
+
+  table
+    width: auto
+
+  td.gutter
+    text-align: right
+    opacity: .2
+
+  .line
+    height: 22px
+
+#header-post #actions
+  direction: ltr !important

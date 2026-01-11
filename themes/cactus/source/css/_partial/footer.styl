@@ -1,0 +1,72 @@
+#footer
+  position: absolute
+  bottom: 0
+  margin-bottom: 10px
+  width: 100%
+  .night &
+    color: $color-night-meta
+  .light &
+    color: $color-light-meta
+  vertical-align: top
+  text-align: center
+  font-size: 12px
+
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+
+  li
+    display: inline-block
+    margin-right: 15px
+    border-right: 1px solid
+    .night &
+      border-color: $color-night-border
+    .light &
+      border-color: $color-light-border
+    vertical-align: middle
+
+    a
+      margin-right: 15px
+
+  li:last-child
+    margin-right: 0
+    border-right: 0
+
+    a
+      margin-right: 0
+
+  a
+    .night &
+      color: $color-night-meta
+    .light &
+      color: $color-light-meta
+    text-decoration: underline
+    background-image: none
+
+  a:hover
+    .night &
+      color: lighten($color-night-meta, 20%)
+    .light &
+      color: lighten($color-light-meta, 20%)
+
+  .footer-left
+    height: 20px
+    vertical-align: middle
+    line-height: 20px
+
+@media (min-width: 39rem)
+  #footer
+    display: flex
+    flex-flow: row wrap
+    justify-content: space-between
+    align-items: center
+    align-content: center
+    margin-bottom: 20px
+
+    .footer-left
+      align-self: flex-start
+      margin-right: 20px
+
+    .footer-right
+      align-self: flex-end

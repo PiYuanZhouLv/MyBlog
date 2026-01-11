@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>友链抽奖机</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #ff9966, #ff5e62);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 10px;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .lottery-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #4fc3f7;
+            border-bottom: 2px solid rgba(79, 195, 247, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        /* 3D卡片样式 */
+        .card-container {
+            perspective: 1000px;
+            width: 320px;
+            height: 400px;
+            margin: 0 auto 30px;
+        }
+        
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-back {
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+        
+        .card-front {
+            background: white;
+            transform: rotateY(180deg);
+            color: #333;
+        }
+        
+        .card-back i {
+            font-size: 6rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .card-back h3 {
+            font-size: 2.2rem;
+            text-align: center;
+        }
+        
+        .friend-link-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 20px 0;
+            border: 5px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .friend-link-name {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            text-align: center;
+        }
+        
+        .friend-link-desc {
+            font-size: 1rem;
+            margin: 0 15px 15px;
+            text-align: center;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .friend-link-url {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2575fc;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 0 10px;
+            word-break: break-all;
+        }
+        
+        /* 品质样式 */
+        .rarity-default {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+        
+        .rarity-blue {
+            background: linear-gradient(135deg, #36D1DC 0%, #5B86E5 100%);
+            color: white;
+        }
+        
+        .rarity-green {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            color: white;
+        }
+        
+        .rarity-gold {
+            background: linear-gradient(135deg, #FDB931 0%, #FF8C00 100%);
+            color: white;
+        }
+        
+        .rarity-red {
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            color: white;
+        }
+        
+        .rarity-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .rarity-default .rarity-indicator {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        
+        .rarity-blue .rarity-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .rarity-green .rarity-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .rarity-gold .rarity-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .rarity-red .rarity-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #36D1DC, #5B86E5);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(91, 134, 229, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .btn-cheat {
+            background: linear-gradient(90deg, #FF416C, #FF4B2B);
+            color: white;
+        }
+        
+        .btn-cheat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(255, 65, 108, 0.4);
+        }
+        
+        /* 友链展示区域 */
+        .friend-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .friend-link-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .friend-link-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .friend-link-item.not-drawn {
+            opacity: 0.5;
+            filter: grayscale(0.8);
+        }
+        
+        .friend-link-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .friend-link-item-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .friend-link-item-rarity {
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-name {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .modal-url {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4fc3f7;
+            word-break: break-all;
+        }
+        
+        .modal-desc {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .rarity-history {
+            margin-top: 25px;
+        }
+        
+        .rarity-history-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #4fc3f7;
+        }
+        
+        .rarity-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .rarity-history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .history-count {
+            font-weight: bold;
+            color: #FFD700;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .card-container {
+                width: 280px;
+                height: 350px;
+            }
+            
+            .friend-link-name {
+                font-size: 1.6rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .friend-links-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes spin {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        .spinning {
+            animation: spin 0.5s linear infinite;
+        }
+        
+        .flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #00b09b, #96c93d);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .quality-info {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .quality-list {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .quality-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quality-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .quality-default .quality-color {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .quality-blue .quality-color {
+            background: linear-gradient(135deg, #36D1DC 0%, #5B86E5 100%);
+        }
+        
+        .quality-green .quality-color {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        }
+        
+        .quality-gold .quality-color {
+            background: linear-gradient(135deg, #FDB931 0%, #FF8C00 100%);
+        }
+        
+        .quality-red .quality-color {
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-gift"></i> 友链抽奖机</h1>
+            <p class="subtitle">点击卡片抽取友链，收集不同品质的友链卡片，解锁全部友链成就！</p>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="total-drawn">0</div>
+                    <div class="stat-label">已抽取友链</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="unique-drawn">0</div>
+                    <div class="stat-label">已解锁友链</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-tries">0</div>
+                    <div class="stat-label">总抽取次数</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <section class="lottery-section">
+                <h2 class="section-title"><i class="fas fa-dice"></i> 友链抽奖</h2>
+                
+                <div class="card-container">
+                    <div class="card" id="lottery-card">
+                        <div class="card-face card-back">
+                            <i class="fas fa-question-circle"></i>
+                            <h3>点击抽奖</h3>
+                            <p>点击卡片开始抽取友链</p>
+                        </div>
+                        <div class="card-face card-front" id="card-front">
+                            <img src="" alt="" class="friend-link-img" id="result-img">
+                            <div class="friend-link-name" id="result-name">友链名称</div>
+                            <div class="friend-link-desc" id="result-desc">友链描述</div>
+                            <div class="friend-link-url" id="result-url">https://example.com</div>
+                            <div class="rarity-indicator" id="result-rarity">普通</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="draw-btn">
+                        <i class="fas fa-redo"></i> 抽取友链
+                    </button>
+                    <button class="btn btn-secondary" id="view-history-btn">
+                        <i class="fas fa-history"></i> 查看记录
+                    </button>
+                    <button class="btn btn-cheat" id="cheat-btn">
+                        <i class="fas fa-lock-open"></i> 一键解锁
+                    </button>
+                </div>
+                
+                <div class="quality-info">
+                    <h3>品质说明</h3>
+                    <div class="quality-list">
+                        <div class="quality-item quality-default">
+                            <div class="quality-color"></div>
+                            <span>普通 (60%)</span>
+                        </div>
+                        <div class="quality-item quality-blue">
+                            <div class="quality-color"></div>
+                            <span>稀有 (25%)</span>
+                        </div>
+                        <div class="quality-item quality-green">
+                            <div class="quality-color"></div>
+                            <span>史诗 (10%)</span>
+                        </div>
+                        <div class="quality-item quality-gold">
+                            <div class="quality-color"></div>
+                            <span>传说 (4%)</span>
+                        </div>
+                        <div class="quality-item quality-red">
+                            <div class="quality-color"></div>
+                            <span>神话 (1%)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="lottery-section">
+                <h2 class="section-title"><i class="fas fa-link"></i> 友链收集</h2>
+                <p>已收集的友链会显示最高品质，点击查看详情</p>
+                
+                <div class="friend-links-grid" id="friend-links-container">
+                    <!-- 友链将通过JS动态生成 -->
+                </div>
+                
+                <div class="controls" style="margin-top: 30px;">
+                    <button class="btn btn-secondary" id="clear-storage-btn">
+                        <i class="fas fa-trash-alt"></i> 清空记录
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- 友链详情模态框 -->
+    <div class="modal" id="friend-detail-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <img src="" alt="" class="modal-img" id="modal-img">
+            <h2 class="modal-name" id="modal-name">友链名称</h2>
+            <div class="modal-url" id="modal-url">https://example.com</div>
+            <p class="modal-desc" id="modal-desc">友链描述</p>
+            
+            <div class="rarity-history">
+                <h3 class="rarity-history-title">抽中记录</h3>
+                <div class="rarity-history-list" id="rarity-history-list">
+                    <!-- 品质记录将通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 通知 -->
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // 友链数据
+        const friendLinks = [
+            {
+                id: 1,
+                name: "技术博客",
+                description: "分享前沿技术、编程技巧和开发心得",
+                url: "https://techblog.example.com",
+                img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 2,
+                name: "设计灵感",
+                description: "每日更新设计趋势和创意灵感",
+                url: "https://design.example.com",
+                img: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 3,
+                name: "旅行日记",
+                description: "记录全球旅行见闻和摄影作品",
+                url: "https://traveldiary.example.com",
+                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 4,
+                name: "美食探索",
+                description: "发现各地美食与烹饪技巧分享",
+                url: "https://foodexplorer.example.com",
+                img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 5,
+                name: "摄影画廊",
+                description: "高质量摄影作品展示与拍摄技巧",
+                url: "https://photogallery.example.com",
+                img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 6,
+                name: "读书笔记",
+                description: "深度书评、读书心得与阅读推荐",
+                url: "https://readingnotes.example.com",
+                img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 7,
+                name: "科技新闻",
+                description: "最新科技动态与产品评测",
+                url: "https://technews.example.com",
+                img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 8,
+                name: "音乐分享",
+                description: "推荐优质音乐与音乐创作心得",
+                url: "https://musicshare.example.com",
+                img: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+            }
+        ];
+
+        // 品质定义
+        const rarities = [
+            { id: 0, name: "普通", class: "rarity-default", probability: 60, color: "#c3cfe2" },
+            { id: 1, name: "稀有", class: "rarity-blue", probability: 25, color: "#5B86E5" },
+            { id: 2, name: "史诗", class: "rarity-green", probability: 10, color: "#96c93d" },
+            { id: 3, name: "传说", class: "rarity-gold", probability: 4, color: "#FF8C00" },
+            { id: 4, name: "神话", class: "rarity-red", probability: 1, color: "#FF4B2B" }
+        ];
+
+        // 存储键名
+        const STORAGE_KEY = "DS1friendLinkLotteryData";
+        const TOTAL_TRIES_KEY = "DS1friendLinkTotalTries";
+
+        // 全局变量
+        let lotteryData = {};
+        let totalTries = 0;
+        let isDrawing = false;
+        let currentAnimation = null;
+
+        // DOM元素
+        const lotteryCard = document.getElementById('lottery-card');
+        const cardFront = document.getElementById('card-front');
+        const drawBtn = document.getElementById('draw-btn');
+        const viewHistoryBtn = document.getElementById('view-history-btn');
+        const cheatBtn = document.getElementById('cheat-btn');
+        const clearStorageBtn = document.getElementById('clear-storage-btn');
+        const friendLinksContainer = document.getElementById('friend-links-container');
+        const friendDetailModal = document.getElementById('friend-detail-modal');
+        const modalClose = document.getElementById('modal-close');
+        const notification = document.getElementById('notification');
+        
+        // 统计元素
+        const totalDrawnElement = document.getElementById('total-drawn');
+        const uniqueDrawnElement = document.getElementById('unique-drawn');
+        const totalTriesElement = document.getElementById('total-tries');
+
+        // 初始化
+        function init() {
+            loadData();
+            renderFriendLinks();
+            updateStats();
+            
+            // 事件监听
+            lotteryCard.addEventListener('click', startLottery);
+            drawBtn.addEventListener('click', startLottery);
+            viewHistoryBtn.addEventListener('click', showAllHistory);
+            cheatBtn.addEventListener('click', unlockAll);
+            clearStorageBtn.addEventListener('click', clearStorage);
+            modalClose.addEventListener('click', () => {
+                friendDetailModal.style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭
+            friendDetailModal.addEventListener('click', (e) => {
+                if (e.target === friendDetailModal) {
+                    friendDetailModal.style.display = 'none';
+                }
+            });
+        }
+
+        // 加载存储的数据
+        function loadData() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            const savedTries = localStorage.getItem(TOTAL_TRIES_KEY);
+            
+            if (savedData) {
+                lotteryData = JSON.parse(savedData);
+            }
+            
+            if (savedTries) {
+                totalTries = parseInt(savedTries);
+            }
+        }
+
+        // 保存数据到localStorage
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(lotteryData));
+            localStorage.setItem(TOTAL_TRIES_KEY, totalTries.toString());
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            // 计算已抽取的友链总数（去重）
+            const uniqueDrawn = Object.keys(lotteryData).length;
+            // 计算总抽取次数
+            let totalDrawnCount = 0;
+            
+            for (const friendId in lotteryData) {
+                const friend = lotteryData[friendId];
+                for (const rarityId in friend.rarities) {
+                    totalDrawnCount += friend.rarities[rarityId];
+                }
+            }
+            
+            totalDrawnElement.textContent = totalDrawnCount;
+            uniqueDrawnElement.textContent = uniqueDrawn;
+            totalTriesElement.textContent = totalTries;
+        }
+
+        // 显示通知
+        function showNotification(message, type = "success") {
+            notification.textContent = message;
+            notification.className = "notification show";
+            
+            // 设置不同通知类型
+            if (type === "success") {
+                notification.style.background = "linear-gradient(90deg, #00b09b, #96c93d)";
+            } else if (type === "info") {
+                notification.style.background = "linear-gradient(90deg, #36D1DC, #5B86E5)";
+            } else if (type === "warning") {
+                notification.style.background = "linear-gradient(90deg, #FF416C, #FF4B2B)";
+            }
+            
+            setTimeout(() => {
+                notification.className = "notification";
+            }, 3000);
+        }
+
+        // 随机选择品质
+        function getRandomRarity() {
+            const random = Math.random() * 100;
+            let cumulative = 0;
+            
+            for (const rarity of rarities) {
+                cumulative += rarity.probability;
+                if (random <= cumulative) {
+                    return rarity;
+                }
+            }
+            
+            // 默认返回普通品质
+            return rarities[0];
+        }
+
+        // 开始抽奖
+        function startLottery() {
+            if (isDrawing) return;
+            
+            isDrawing = true;
+            totalTries++;
+            
+            // 随机选择友链
+            const randomIndex = Math.floor(Math.random() * friendLinks.length);
+            const selectedFriend = friendLinks[randomIndex];
+            
+            // 随机选择品质
+            const selectedRarity = getRandomRarity();
+            
+            // 记录抽取结果
+            recordDrawResult(selectedFriend.id, selectedRarity.id);
+            
+            // 开始动画
+            startLotteryAnimation(selectedFriend, selectedRarity);
+        }
+
+        // 记录抽取结果
+        function recordDrawResult(friendId, rarityId) {
+            if (!lotteryData[friendId]) {
+                lotteryData[friendId] = {
+                    highestRarity: rarityId,
+                    rarities: {}
+                };
+            }
+            
+            // 初始化该品质的计数
+            if (!lotteryData[friendId].rarities[rarityId]) {
+                lotteryData[friendId].rarities[rarityId] = 0;
+            }
+            
+            // 增加计数
+            lotteryData[friendId].rarities[rarityId]++;
+            
+            // 更新最高品质
+            if (rarityId > lotteryData[friendId].highestRarity) {
+                lotteryData[friendId].highestRarity = rarityId;
+            }
+            
+            // 保存数据
+            saveData();
+        }
+
+        // 开始抽奖动画
+        function startLotteryAnimation(friend, rarity) {
+            // 禁用按钮
+            drawBtn.disabled = true;
+            drawBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 抽取中...';
+            
+            // 快速旋转动画
+            lotteryCard.classList.add('spinning');
+            
+            // 设置动画速度（由快到慢）
+            let spinCount = 0;
+            const totalSpins = 15 + Math.floor(Math.random() * 10); // 随机旋转次数
+            const initialSpeed = 100; // 初始速度（毫秒）
+            const finalSpeed = 500; // 最终速度（毫秒）
+            
+            // 在旋转过程中随机显示友链
+            function updateSpin() {
+                spinCount++;
+                
+                // 计算当前旋转速度（由快到慢）
+                const progress = spinCount / totalSpins;
+                const currentSpeed = initialSpeed + (finalSpeed - initialSpeed) * progress;
+                
+                // 在旋转过程中随机显示不同的友链和品质
+                if (spinCount < totalSpins) {
+                    // 随机显示一个友链和品质（模拟旋转效果）
+                    const randomFriend = friendLinks[Math.floor(Math.random() * friendLinks.length)];
+                    const randomRarity = rarities[Math.floor(Math.random() * rarities.length)];
+                    
+                    // 更新卡片内容（不翻转）
+                    updateCardContent(randomFriend, randomRarity, false);
+                    
+                    // 继续旋转
+                    currentAnimation = setTimeout(updateSpin, currentSpeed);
+                } else {
+                    // 旋转结束，显示最终结果
+                    finishLotteryAnimation(friend, rarity);
+                }
+            }
+            
+            // 开始旋转
+            currentAnimation = setTimeout(updateSpin, initialSpeed);
+        }
+
+        // 更新卡片内容
+        function updateCardContent(friend, rarity, flip = true) {
+            const resultImg = document.getElementById('result-img');
+            const resultName = document.getElementById('result-name');
+            const resultDesc = document.getElementById('result-desc');
+            const resultUrl = document.getElementById('result-url');
+            const resultRarity = document.getElementById('result-rarity');
+            
+            // 更新内容
+            resultImg.src = friend.img;
+            resultImg.alt = friend.name;
+            resultName.textContent = friend.name;
+            resultDesc.textContent = friend.description;
+            resultUrl.textContent = friend.url;
+            resultRarity.textContent = rarity.name;
+            
+            // 更新品质样式
+            cardFront.className = `card-face card-front ${rarity.class}`;
+            
+            // 如果需要翻转卡片
+            if (flip) {
+                lotteryCard.classList.remove('spinning');
+                lotteryCard.classList.add('flipped');
+            }
+        }
+
+        // 完成抽奖动画
+        function finishLotteryAnimation(friend, rarity) {
+            // 清除动画
+            if (currentAnimation) {
+                clearTimeout(currentAnimation);
+            }
+            
+            // 显示最终结果
+            updateCardContent(friend, rarity, true);
+            
+            // 恢复按钮状态
+            drawBtn.disabled = false;
+            drawBtn.innerHTML = '<i class="fas fa-redo"></i> 抽取友链';
+            
+            // 更新界面
+            renderFriendLinks();
+            updateStats();
+            
+            // 显示通知
+            showNotification(`恭喜！抽中了 ${rarity.name} 品质的「${friend.name}」`, "success");
+            
+            // 重置状态
+            setTimeout(() => {
+                isDrawing = false;
+            }, 1000);
+        }
+
+        // 渲染友链展示区域
+        function renderFriendLinks() {
+            friendLinksContainer.innerHTML = '';
+            
+            friendLinks.forEach(friend => {
+                const friendData = lotteryData[friend.id];
+                const hasDrawn = friendData && friendData.highestRarity !== undefined;
+                const highestRarityId = hasDrawn ? friendData.highestRarity : -1;
+                const highestRarity = rarities[highestRarityId] || rarities[0];
+                
+                // 创建友链项
+                const friendElement = document.createElement('div');
+                friendElement.className = `friend-link-item ${hasDrawn ? '' : 'not-drawn'}`;
+                friendElement.dataset.id = friend.id;
+                
+                friendElement.innerHTML = `
+                    <img src="${friend.img}" alt="${friend.name}" class="friend-link-item-img">
+                    <div class="friend-link-item-name">${friend.name}</div>
+                    <div class="friend-link-item-rarity ${highestRarity.class}" style="background: ${hasDrawn ? highestRarity.color : '#555'}">
+                        ${hasDrawn ? highestRarity.name : '未解锁'}
+                    </div>
+                `;
+                
+                // 点击查看详情
+                friendElement.addEventListener('click', () => {
+                    showFriendDetail(friend.id);
+                });
+                
+                friendLinksContainer.appendChild(friendElement);
+            });
+        }
+
+        // 显示友链详情
+        function showFriendDetail(friendId) {
+            const friend = friendLinks.find(f => f.id === parseInt(friendId));
+            const friendData = lotteryData[friendId];
+            
+            if (!friend) return;
+            
+            // 更新模态框内容
+            document.getElementById('modal-img').src = friend.img;
+            document.getElementById('modal-img').alt = friend.name;
+            document.getElementById('modal-name').textContent = friend.name;
+            document.getElementById('modal-url').textContent = friend.url;
+            document.getElementById('modal-desc').textContent = friend.description;
+            
+            // 更新品质记录
+            const rarityHistoryList = document.getElementById('rarity-history-list');
+            rarityHistoryList.innerHTML = '';
+            
+            if (friendData) {
+                // 按品质ID排序显示
+                for (let i = rarities.length - 1; i >= 0; i--) {
+                    const rarity = rarities[i];
+                    const count = friendData.rarities[rarity.id] || 0;
+                    
+                    const historyItem = document.createElement('div');
+                    historyItem.className = `rarity-history-item ${rarity.class}`;
+                    historyItem.innerHTML = `
+                        <span>${rarity.name}</span>
+                        <span class="history-count">${count} 次</span>
+                    `;
+                    
+                    rarityHistoryList.appendChild(historyItem);
+                }
+            } else {
+                // 如果还没有记录
+                const noHistoryItem = document.createElement('div');
+                noHistoryItem.className = 'rarity-history-item';
+                noHistoryItem.innerHTML = `
+                    <span>尚未抽中此友链</span>
+                    <span class="history-count">0 次</span>
+                `;
+                rarityHistoryList.appendChild(noHistoryItem);
+            }
+            
+            // 显示模态框
+            friendDetailModal.style.display = 'flex';
+        }
+
+        // 显示所有历史记录
+        function showAllHistory() {
+            // 创建包含所有记录的模态框内容
+            let historyHTML = '<h2 class="section-title" style="margin-top: 0;"><i class="fas fa-history"></i> 所有抽奖记录</h2>';
+            
+            if (Object.keys(lotteryData).length === 0) {
+                historyHTML += '<p>暂无抽奖记录，点击抽奖开始收集友链！</p>';
+            } else {
+                // 按总抽取次数排序
+                const sortedFriends = friendLinks.map(friend => {
+                    const data = lotteryData[friend.id] || { rarities: {} };
+                    let totalCount = 0;
+                    for (const rarityId in data.rarities) {
+                        totalCount += data.rarities[rarityId];
+                    }
+                    return { friend, data, totalCount };
+                }).sort((a, b) => b.totalCount - a.totalCount);
+                
+                historyHTML += '<div class="history-list">';
+                
+                sortedFriends.forEach(item => {
+                    if (item.totalCount > 0) {
+                        const highestRarity = rarities[item.data.highestRarity] || rarities[0];
+                        
+                        historyHTML += `
+                            <div class="history-friend-item" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <img src="${item.friend.img}" alt="${item.friend.name}" style="width: 60px; height: 60px; border-radius: 50%;">
+                                    <div style="flex: 1;">
+                                        <h3 style="margin-bottom: 5px;">${item.friend.name}</h3>
+                                        <div style="font-size: 0.9rem; opacity: 0.8;">${item.friend.url}</div>
+                                    </div>
+                                    <div class="${highestRarity.class}" style="padding: 5px 15px; border-radius: 20px; font-weight: bold;">
+                                        ${highestRarity.name}
+                                    </div>
+                                </div>
+                                <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        `;
+                        
+                        // 显示各品质次数
+                        for (let i = rarities.length - 1; i >= 0; i--) {
+                            const rarity = rarities[i];
+                            const count = item.data.rarities[rarity.id] || 0;
+                            if (count > 0) {
+                                historyHTML += `
+                                    <div style="background: ${rarity.color}; color: white; padding: 3px 10px; border-radius: 15px; font-size: 0.9rem;">
+                                        ${rarity.name}: ${count}
+                                    </div>
+                                `;
+                            }
+                        }
+                        
+                        historyHTML += `
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                historyHTML += '</div>';
+            }
+            
+            // 创建临时模态框显示所有记录
+            const tempModal = document.createElement('div');
+            tempModal.className = 'modal';
+            tempModal.style.display = 'flex';
+            tempModal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <button class="modal-close" id="temp-modal-close">&times;</button>
+                    ${historyHTML}
+                </div>
+            `;
+            
+            document.body.appendChild(tempModal);
+            
+            // 关闭按钮事件
+            tempModal.querySelector('#temp-modal-close').addEventListener('click', () => {
+                document.body.removeChild(tempModal);
+            });
+            
+            // 点击外部关闭
+            tempModal.addEventListener('click', (e) => {
+                if (e.target === tempModal) {
+                    document.body.removeChild(tempModal);
+                }
+            });
+        }
+
+        // 一键解锁所有基础友链
+        function unlockAll() {
+            if (!confirm('确定要一键解锁所有基础友链吗？这将为每个友链添加一次普通品质的记录。')) {
+                return;
+            }
+            
+            friendLinks.forEach(friend => {
+                // 如果友链还没有记录，则添加普通品质记录
+                if (!lotteryData[friend.id]) {
+                    recordDrawResult(friend.id, 0); // 0 代表普通品质
+                }
+            });
+            
+            // 更新显示
+            renderFriendLinks();
+            updateStats();
+            
+            showNotification('已解锁所有基础友链！', "info");
+        }
+
+        // 清空存储记录
+        function clearStorage() {
+            if (!confirm('确定要清空所有抽奖记录吗？此操作不可撤销。')) {
+                return;
+            }
+            
+            lotteryData = {};
+            totalTries = 0;
+            saveData();
+            
+            // 重置卡片
+            lotteryCard.classList.remove('flipped', 'spinning');
+            
+            // 更新显示
+            renderFriendLinks();
+            updateStats();
+            
+            showNotification('所有记录已清空！', "warning");
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

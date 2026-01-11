@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html<%= config.language ? " lang=" + config.language.substring(0, 2) : ""%> class="night" style="font-size: 20px">
+<%- partial('_partial/head') %>
+<body class="max-width mx-auto px3 <%- theme.direction -%>" style="transition: 0.3s;">
+    <a id="extra-logo" class="hide-on-phone" href="/" style="position: fixed; left: 0; top: 0; z-index: 999; margin: 10px; display: flex; align-items: center; text-decoration: none; color: inherit; background: inherit; border: 1px solid; border-radius: 10px; padding-left: 10px; transition: opacity 0.3s;"><img src="<%- url_for(theme.logo.url) %>" style="width: 50px; height: 50px; border-radius: 5px;"><h1 class="p-name" style="display: inline; margin: 10px;"><%= config.title %></h1></a>
+    <script>
+      if((localStorage.getItem("extra-logo")||'show')==='none'){
+        document.getElementById("extra-logo").style.display = 'none';
+      }else{
+        document.getElementById("extra-logo").style.display = 'flex';
+      }
+    </script>
+    <div style="position: fixed; right: 0; bottom: 0; z-index: 999; margin: 10px;">
+      <button id="sun" style="border: none; background: none; color:white; cursor: pointer;" onclick="switchColorScheme('light')"><svg style="width: 25px; height: 25px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"></path><path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z"></path></svg></button>
+      <button id="moon" style="border: none; background: none; color: black; cursor: pointer;" onclick="switchColorScheme('night')"><svg style="width: 25px; height: 25px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"></path><path d="M11.3807 2.01886C9.91573 3.38768 9 5.3369 9 7.49999C9 11.6421 12.3579 15 16.5 15C18.6631 15 20.6123 14.0843 21.9811 12.6193C21.6613 17.8537 17.3149 22 12 22C6.47715 22 2 17.5228 2 12C2 6.68514 6.14629 2.33869 11.3807 2.01886Z"></path></svg></button>
+    </div>
+    <script>
+      colorScheme = localStorage.getItem('color-scheme') || 'auto'
+      colorScheme = colorScheme==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?"night":"light"):colorScheme
+      if(colorScheme==='light'){
+        document.getElementById("sun").style.display = "none"
+        document.getElementById("moon").style.display = ""
+      }else{
+        document.getElementById("sun").style.display = ""
+        document.getElementById("moon").style.display = "none"
+      }
+      function switchColorScheme(scheme){
+        localStorage.setItem("color-scheme", scheme)
+        if(scheme==='light'){
+          document.getElementById("sun").style.display = "none"
+          document.getElementById("moon").style.display = ""
+          let classlist = document.querySelector("html").classList
+          classlist.remove('night')
+          classlist.add('light')
+        }else{
+          document.getElementById("sun").style.display = ""
+          document.getElementById("moon").style.display = "none"
+          let classlist = document.querySelector("html").classList
+          classlist.add('night')
+          classlist.remove('light')
+        }
+      }
+    </script>
+    <script>
+      localStorage = localStorage || {getItem: ()=>(undefined)};
+      if((localStorage.getItem("backbtn-func")||"session")==="session"){
+        function pushHistory(url){
+          let arr = JSON.parse(sessionStorage.getItem('history') || '[]');
+          arr.push(url);
+          sessionStorage.setItem('history', JSON.stringify(arr));
+        }
+        function popHistory(){
+          let arr = JSON.parse(sessionStorage.getItem('history') || '[]');
+          let url = arr.pop() || '/';
+          sessionStorage.setItem('history', JSON.stringify(arr));
+          return url;
+        }
+        if(sessionStorage.getItem('backing')){
+          sessionStorage.removeItem('backing');
+        }else{
+          pushHistory(document.referrer || '/');
+        }
+      }
+    </script>
+    <style>
+      @media screen and (max-width: 1468px) {
+        .hide-on-phone{
+          margin: 0px !important;
+          border-bottom-left-radius: 0px !important;
+          border-top-right-radius: 0px !important;
+          border-top: none !important;
+          border-left: none !important;
+        }
+      }
+    </style>
+    <% if (page.toc) { %>
+      <%- partial('_partial/post/actions_desktop') %>
+      <style>
+        span#nav {
+          display: none !important;
+        }
+      </style>
+    <% } %>
+    <% if (!page.toc && is_post()) { %>
+      <%- partial('_partial/post/actions_desktop') %>
+      <style>
+        @media screen and (max-width: 630px) {
+          .hide-on-phone{
+            margin: 0 !important;
+            width: 100%;
+            border: none !important;
+            border-radius: 0 !important;
+            border-bottom: gray 1px solid !important;
+          }
+        }
+        @media screen and (max-width: 630px) {
+          #menu{
+            display: none !important;
+          }
+        }
+      </style>
+    <% } %>
+    <div class="content index py4 <%= is_home() ? 'h-card' : '' %>">
+        <% if (!is_post()) { %>
+          <%- partial('_partial/header') %>
+          <style>
+            @media screen and (max-width: 1468px) {
+              .hide-on-phone{
+                display: none !important;
+              }
+            }
+          </style>
+          <script>
+            sessionStorage.setItem('history', "[]");
+          </script>
+        <% } else { %>
+          <!-- <button onclick="" style="border: 1px solid; border-radius: 5px; background: none; color: inherit; font-size: 20px; cursor: pointer; width: fit-content; margin-bottom: 10px; font-family: inherit;">&lt; 返回</button> -->
+          <button id="backbtn" onclick="onBackbtnClick()" style="border: 1px solid; border-radius: 5px; background: none; color: inherit; font-size: 20px; cursor: pointer; width: fit-content; margin-bottom: 10px; font-family: inherit;">&lt; 返回</button>
+          <script>
+            function onBackbtnClick(){
+              switch (localStorage.getItem("backbtn-func")) {
+                case "referer":
+                  location.href = document.referrer || '/';
+                  break;
+
+                case "history":
+                  history.back();
+                  break
+              
+                default:
+                  sessionStorage.setItem('backing', 1);
+                  location.href = popHistory();
+              }
+            }
+            if(localStorage.getItem("backbtn-func")==="none"){
+              document.getElementById("backbtn").style.display = 'none';
+            }
+          </script>
+        <% } %>
+        <%- body %>
+        <% if (is_post() || page.toc) { %>
+          <%- partial('_partial/post/actions_mobile') %>
+        <% } %>
+        <%- partial('_partial/footer') %>
+    </div>
+    <%- partial('_partial/styles') %>
+    <%- partial('_partial/scripts') %>
+</body>
+</html>

@@ -1,0 +1,245 @@
+#header-post
+  position: fixed
+  top: 2rem
+  right: 0
+  display: inline-block
+  float: right
+  z-index: 100
+
+  a
+    background: none
+    color: inherit
+    text-decoration: none
+
+  a.icon
+    background: none
+
+    .light &:hover
+      color: $color-light-link
+    .night &:hover
+      color: $color-night-link
+
+  ol
+    list-style-type: none
+
+  ul
+    display: inline-block
+    margin: 0
+    padding: 0
+    list-style-type: none
+
+    li
+      display: inline-block
+      margin-right: 15px
+      vertical-align: middle
+
+    li:last-child
+      margin-right: 0
+
+  #menu-icon
+    float: right
+    margin-right: 2rem
+    margin-left: 15px
+
+    .light &:hover
+      color: $color-light-accent-1
+    .night &:hover
+      color: $color-night-accent-1
+
+  #menu-icon-tablet
+    float: right
+    margin-right: 2rem
+    margin-left: 15px
+
+    .light &:hover
+      color: $color-light-accent-1
+    .night &:hover
+      color: $color-night-accent-1
+
+  #top-icon-tablet
+    position: fixed
+    right: 2rem
+    bottom: 2rem
+    margin-right: 2rem
+    margin-left: 15px
+
+    .light &:hover
+      color: $color-light-accent-1
+    .night &:hover
+      color: $color-night-accent-1
+
+  .active
+    .light &
+      color: $color-light-accent-1
+    .night &
+      color: $color-night-accent-1
+
+  #menu
+    display: none
+    margin-right: 2rem
+
+  #nav
+    .light &
+      color: $color-light-accent-1
+    .night &
+      color: $color-night-accent-1
+    letter-spacing: .01em
+    font-weight: 200
+    font-style: normal
+    font-size: .8rem
+
+    ul
+      line-height: 15px
+
+      a
+        margin-right: 15px
+        .light &
+          color: $color-light-accent-1
+        .night &
+          color: $color-night-accent-1
+
+      a:hover
+        .light &
+          underline(5px, $color-light-accent-1)
+        .night &
+          underline(5px, $color-night-accent-1)
+
+      li
+        .light & 
+          border-right: 1px dotted $color-light-accent-1
+        .night &
+          border-right: 1px dotted $color-night-accent-1
+
+      li:last-child
+        margin-right: 0
+        border-right: 0
+
+        a
+          margin-right: 0
+
+  #actions
+    float: right
+    margin-top: 2rem
+    margin-right: 2rem
+    width: 100%
+    text-align: right
+
+    ul
+      display: block
+
+    .info
+      display: block
+      font-style: italic
+
+  #share
+    clear: both
+    padding-top: 1rem
+    padding-right: 2rem
+    text-align: right
+
+    li
+      display: block
+      margin: 0
+
+  #toc
+    float: right
+    clear: both
+    overflow: auto
+    margin-top: 1rem
+    padding-right: 2rem
+    max-width: 20em
+    max-height: calc(95vh - 7rem)
+    text-align: right
+
+    a:hover
+      .light &
+        color: $color-light-link
+      .night &
+        color: $color-night-link
+
+    .toc-level-1 > .toc-link
+      display: none
+
+    .toc-level-2
+      .light &
+        color: $color-light-text
+      .night &
+        color: $color-night-text
+      font-size: .8rem
+
+      &:before
+        .light &
+          color: $color-light-accent-1
+        .night &
+          color: $color-night-accent-1
+        content: "#"
+
+    .toc-level-3
+      .night &
+        color: $color-night-meta
+      .light &
+        color: $color-light-meta
+      font-size: .7rem
+
+    .toc-level-4
+      .night &
+        color: darken($color-night-meta, 20%)
+      .light &
+        color: darken($color-light-meta, 20%)
+      font-size: .4rem
+
+    .toc-level-5
+      display: none
+
+    .toc-level-6
+      display: none
+
+    .toc-number
+      display: none
+
+// smartphone + phapblet
+@media screen and (max-width: 500px)
+  #header-post
+    display: none
+
+@media screen and (max-width: 900px)
+  #header-post
+    #menu-icon
+      display: none
+
+    #actions
+      display: none
+
+@media screen and (max-width: 1199px)
+  #header-post
+    #toc
+      display: none
+
+@media screen and (min-width: 900px)
+  #header-post
+    #menu-icon-tablet
+      display: none !important
+
+    #top-icon-tablet
+      display: none !important
+
+@media screen and (min-width: 1199px)
+  #header-post
+    #actions
+      width: auto
+
+      ul
+        display: inline-block
+        float: right
+
+      .info
+        display: inline
+        float: left
+        margin-right: 2rem
+        font-style: italic
+
+@media print 
+  #header-post
+    display: none
+  #footer-post-container
+    display: none

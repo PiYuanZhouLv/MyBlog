@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>友链抽奖机</title>
+    <style>
+        /* 基础样式 - 简约风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 标题样式 */
+        h1, h2, h3 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            border-bottom: 3px solid #4a6fa5;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* 标签页导航 */
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            color: #666;
+            transition: color 0.2s;
+        }
+        
+        .tab-btn:hover {
+            color: #333;
+        }
+        
+        .tab-btn.active {
+            color: #4a6fa5;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #4a6fa5;
+        }
+        
+        /* 页面容器 */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* 抽奖机区域 */
+        .lottery-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        /* 卡牌容器 - 3D效果 */
+        .card-container {
+            width: 320px;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .card-front {
+            background-color: #f0f0f0;
+            transform: rotateY(180deg);
+            padding: 20px;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #4a6fa5, #6b93d6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* 卡牌内容 */
+        .card-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            border: 2px solid #ddd;
+        }
+        
+        .card-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+        
+        .card-desc {
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+            flex-grow: 1;
+        }
+        
+        .card-url {
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #4a6fa5;
+            text-decoration: none;
+            padding: 8px;
+            border-top: 1px solid #eee;
+            word-break: break-all;
+        }
+        
+        .card-url:hover {
+            text-decoration: underline;
+        }
+        
+        /* 品质样式 */
+        .quality-default {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .quality-green {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .quality-blue {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .quality-gold {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .quality-red {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        /* 抽取按钮 */
+        .draw-btn {
+            padding: 12px 36px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            box-shadow: 0 3px 0 0 #2d4a7a;
+            margin-top: 10px;
+        }
+        
+        .draw-btn:hover {
+            background-color: #3d5c8a;
+        }
+        
+        .draw-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 0 #2d4a7a;
+        }
+        
+        .draw-btn:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+            box-shadow: 0 3px 0 0 #888;
+        }
+        
+        /* 展示页面样式 */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .filter-toggle input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* 收集进度 */
+        .progress-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .quality-progress {
+            flex: 1;
+            min-width: 180px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        /* 友链展示网格 */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .link-card {
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+        }
+        
+        .link-card-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .link-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .link-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        
+        .link-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .link-url {
+            color: #4a6fa5;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .link-desc {
+            padding: 0 15px 15px;
+            color: #666;
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+        
+        /* 品质徽章 */
+        .quality-badge {
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .quality-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 15px 15px;
+            border-top: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+        
+        .quality-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-rect {
+            width: 60px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transform: skewX(-10deg);
+            font-weight: 700;
+            margin-bottom: 5px;
+            transition: all 0.2s;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .stat-rect.small-font {
+            font-size: 0.9rem;
+        }
+        
+        .stat-rect.xsmall-font {
+            font-size: 0.8rem;
+        }
+        
+        /* 未抽中样式 */
+        .not-drawn {
+            opacity: 0.7;
+        }
+        
+        .not-drawn .link-avatar,
+        .not-drawn .link-name,
+        .not-drawn .link-desc {
+            filter: grayscale(100%);
+            color: #999;
+        }
+        
+        /* 管理面板 */
+        .management-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-top: 30px;
+        }
+        
+        .management-panel h3 {
+            color: #4a6fa5;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid;
+        }
+        
+        .cheat-btn {
+            background-color: #ffeb3b;
+            color: #333;
+            border-bottom-color: #fbc02d;
+        }
+        
+        .export-btn {
+            background-color: #4caf50;
+            color: white;
+            border-bottom-color: #388e3c;
+        }
+        
+        .import-btn {
+            background-color: #2196f3;
+            color: white;
+            border-bottom-color: #1976d2;
+        }
+        
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border-bottom-color: #d32f2f;
+        }
+        
+        .action-btn:hover {
+            filter: brightness(0.95);
+        }
+        
+        /* 导入导出弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            background-color: #4a6fa5;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .modal-left {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #eee;
+        }
+        
+        .modal-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        
+        .modal-right {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .modal-info {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .modal-desc {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .modal-link {
+            color: #4a6fa5;
+            font-weight: 600;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        
+        .modal-link:hover {
+            text-decoration: underline;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #ddd;
+        }
+        
+        .modal-close {
+            padding: 8px 20px;
+            background-color: #666;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .modal-close:hover {
+            background-color: #555;
+        }
+        
+        /* 品质矩形条 */
+        .quality-bars {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .quality-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .quality-rect {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transform: skewX(-10deg);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .quality-bar-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .quality-rect.small-font {
+            font-size: 1rem;
+        }
+        
+        .quality-rect.xsmall-font {
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .modal-body {
+                flex-direction: column;
+            }
+            
+            .modal-left {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .quality-bars {
+                flex-wrap: wrap;
+            }
+            
+            .quality-bar {
+                flex: 0 0 calc(50% - 10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>友链抽奖机</h1>
+    
+    <!-- 标签页导航 -->
+    <div class="tabs">
+        <button class="tab-btn active" data-page="lottery">抽奖机</button>
+        <button class="tab-btn" data-page="collection">展示页面</button>
+    </div>
+    
+    <!-- 抽奖机页面 -->
+    <div id="lottery-page" class="page active">
+        <div class="lottery-section">
+            <div class="card-container">
+                <div class="card" id="lottery-card">
+                    <div class="card-face card-front" id="card-front">
+                        <!-- 正面内容由JS动态生成 -->
+                    </div>
+                    <div class="card-face card-back" id="card-back">
+                        <div>点击抽取友链</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="draw-btn" id="draw-btn">开始抽奖</button>
+            <div style="margin-top: 15px; color: #666; text-align: center;">
+                已抽取: <span id="drawn-count">0</span> / <span id="total-count">0</span> 个友链
+            </div>
+        </div>
+        
+        <div class="management-panel">
+            <h3>数据管理</h3>
+            <div class="btn-group">
+                <button class="action-btn cheat-btn" id="cheat-btn">一键解锁所有友链</button>
+                <button class="action-btn export-btn" id="export-btn">导出数据</button>
+                <button class="action-btn import-btn" id="import-btn">导入数据</button>
+                <button class="action-btn delete-btn" id="delete-btn">删除所有数据</button>
+            </div>
+            <p style="color: #666; font-size: 0.9rem;">注意：删除操作不可撤销，请谨慎操作</p>
+        </div>
+    </div>
+    
+    <!-- 展示页面 -->
+    <div id="collection-page" class="page">
+        <div class="controls">
+            <input type="text" class="search-box" id="search-input" placeholder="搜索友链名称...">
+            <div class="filter-toggle">
+                <input type="checkbox" id="show-undrawn" checked>
+                <label for="show-undrawn">显示未抽中的友链</label>
+            </div>
+        </div>
+        
+        <div class="progress-section" id="progress-section">
+            <!-- 收集进度由JS动态生成 -->
+        </div>
+        
+        <div class="links-grid" id="links-grid">
+            <!-- 友链卡片由JS动态生成 -->
+        </div>
+        
+        <div class="management-panel">
+            <h3>数据管理</h3>
+            <div class="btn-group">
+                <button class="action-btn cheat-btn" id="cheat-btn-2">一键解锁所有友链</button>
+                <button class="action-btn export-btn" id="export-btn-2">导出数据</button>
+                <button class="action-btn import-btn" id="import-btn-2">导入数据</button>
+                <button class="action-btn delete-btn" id="delete-btn-2">删除所有数据</button>
+            </div>
+            <p style="color: #666; font-size: 0.9rem;">注意：删除操作不可撤销，请谨慎操作</p>
+        </div>
+    </div>
+    
+    <!-- 导入导出弹窗 -->
+    <div class="modal" id="export-modal">
+        <div class="modal-content">
+            <div class="modal-header">导出数据</div>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <img src="" alt="导出" class="modal-avatar" id="export-avatar">
+                </div>
+                <div class="modal-right">
+                    <div class="modal-info">
+                        <div class="modal-title">友链抽奖数据</div>
+                        <div class="modal-desc">
+                            <p>以下是你当前的抽奖数据，包含所有已抽取的友链及其品质记录。你可以复制此数据保存到本地，或用于在其他设备上导入。</p>
+                            <p>数据格式为JSON，包含所有友链的抽取记录和统计信息。</p>
+                        </div>
+                        <textarea id="export-data" style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; resize: none;" readonly></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="action-btn" id="copy-btn" style="background-color: #4a6fa5; color: white; border-bottom-color: #2d4a7a;">复制数据</button>
+                        <button class="modal-close" id="close-export-modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="import-modal">
+        <div class="modal-content">
+            <div class="modal-header">导入数据</div>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <img src="" alt="导入" class="modal-avatar" id="import-avatar">
+                </div>
+                <div class="modal-right">
+                    <div class="modal-info">
+                        <div class="modal-title">导入友链抽奖数据</div>
+                        <div class="modal-desc">
+                            <p>请将之前导出的数据粘贴到下方文本框中，然后点击导入按钮。</p>
+                            <p>注意：导入数据将覆盖当前的所有抽奖记录，请谨慎操作。</p>
+                        </div>
+                        <textarea id="import-data" style="width: 100%; height: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; resize: none;" placeholder="请粘贴导出的数据..."></textarea>
+                        <div id="import-error" style="color: #f44336; margin-top: 10px; display: none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="action-btn" id="confirm-import-btn" style="background-color: #4caf50; color: white; border-bottom-color: #388e3c;">导入数据</button>
+                        <button class="modal-close" id="close-import-modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 友链数据 - 可随时间更改
+        const friendLinks = [
+            { id: 1, name: "技术博客", description: "分享编程技术与开发经验", url: "https://techblog.example.com", image: "https://via.placeholder.com/120/4a6fa5/ffffff?text=Tech" },
+            { id: 2, name: "设计之旅", description: "探索UI/UX设计与创意", url: "https://designjourney.example.com", image: "https://via.placeholder.com/120/2e7d32/ffffff?text=Design" },
+            { id: 3, name: "生活随笔", description: "记录生活中的点滴感悟", url: "https://lifenotes.example.com", image: "https://via.placeholder.com/120/1565c0/ffffff?text=Life" },
+            { id: 4, name: "旅行摄影", description: "用镜头捕捉世界的美好", url: "https://travelphotos.example.com", image: "https://via.placeholder.com/120/ff8f00/ffffff?text=Travel" },
+            { id: 5, name: "美食探索", description: "发现与分享美味佳肴", url: "https://foodexplorer.example.com", image: "https://via.placeholder.com/120/c62828/ffffff?text=Food" },
+            { id: 6, name: "读书笔记", description: "阅读心得与书籍推荐", url: "https://booknotes.example.com", image: "https://via.placeholder.com/120/6a1b9a/ffffff?text=Books" },
+            { id: 7, name: "健身日记", description: "记录健身历程与成果", url: "https://fitnessdiary.example.com", image: "https://via.placeholder.com/120/00897b/ffffff?text=Fitness" },
+            { id: 8, name: "科技新闻", description: "最新科技动态与产品评测", url: "https://technews.example.com", image: "https://via.placeholder.com/120/5d4037/ffffff?text=News" },
+            { id: 9, name: "音乐分享", description: "推荐好听的音乐与歌单", url: "https://musicbox.example.com", image: "https://via.placeholder.com/120/ad1457/ffffff?text=Music" },
+            { id: 10, name: "电影评论", description: "分享观影感受与推荐", url: "https://moviereviews.example.com", image: "https://via.placeholder.com/120/283593/ffffff?text=Movie" },
+            { id: 11, name: "编程教程", description: "从入门到精通的编程指南", url: "https://codingtutorial.example.com", image: "https://via.placeholder.com/120/0277bd/ffffff?text=Coding" },
+            { id: 12, name: "投资理财", description: "分享理财知识与投资经验", url: "https://investment.example.com", image: "https://via.placeholder.com/120/558b2f/ffffff?text=Invest" },
+            { id: 13, name: "游戏评测", description: "游戏体验分享与推荐", url: "https://gamereviews.example.com", image: "https://via.placeholder.com/120/e65100/ffffff?text=Game" },
+            { id: 14, name: "职场心得", description: "职场经验与成长分享", url: "https://careertips.example.com", image: "https://via.placeholder.com/120/37474f/ffffff?text=Career" },
+            { id: 15, name: "学习笔记", description: "各类学习资料与笔记", url: "https://studynotes.example.com", image: "https://via.placeholder.com/120/4527a0/ffffff?text=Study" }
+        ];
+        
+        // 品质定义
+        const qualities = [
+            { id: 0, name: "默认", className: "quality-default", color: "#666" },
+            { id: 1, name: "绿色", className: "quality-green", color: "#2e7d32" },
+            { id: 2, name: "蓝色", className: "quality-blue", color: "#1565c0" },
+            { id: 3, name: "金色", className: "quality-gold", color: "#ff8f00" },
+            { id: 4, name: "红色", className: "quality-red", color: "#c62828" }
+        ];
+        
+        // 存储键名
+        const STORAGE_KEY = "DS2friendLinkLotteryData";
+        
+        // 全局变量
+        let lotteryData = {
+            drawn: {}, // 记录已抽取的友链及品质 {友链id: [品质数组]}
+            stats: { totalDraws: 0, lastDrawTime: null }
+        };
+        
+        let isDrawing = false;
+        let currentRotation = 0;
+        
+        // DOM元素
+        const card = document.getElementById('lottery-card');
+        const cardFront = document.getElementById('card-front');
+        const cardBack = document.getElementById('card-back');
+        const drawBtn = document.getElementById('draw-btn');
+        const tabs = document.querySelectorAll('.tab-btn');
+        const pages = document.querySelectorAll('.page');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', init);
+        
+        function init() {
+            // 从localStorage加载数据
+            loadData();
+            
+            // 设置标签页切换
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const pageId = tab.getAttribute('data-page');
+                    
+                    // 更新标签状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // 显示对应页面
+                    pages.forEach(page => {
+                        page.classList.remove('active');
+                        if (page.id === `${pageId}-page`) {
+                            page.classList.add('active');
+                        }
+                    });
+                    
+                    // 如果是展示页面，刷新内容
+                    if (pageId === 'collection') {
+                        renderCollectionPage();
+                    }
+                });
+            });
+            
+            // 设置抽奖按钮事件
+            drawBtn.addEventListener('click', startLottery);
+            
+            // 设置卡牌点击事件
+            card.addEventListener('click', () => {
+                if (!isDrawing) {
+                    startLottery();
+                }
+            });
+            
+            // 设置管理按钮事件
+            document.getElementById('cheat-btn').addEventListener('click', cheatUnlockAll);
+            document.getElementById('cheat-btn-2').addEventListener('click', cheatUnlockAll);
+            document.getElementById('export-btn').addEventListener('click', showExportModal);
+            document.getElementById('export-btn-2').addEventListener('click', showExportModal);
+            document.getElementById('import-btn').addEventListener('click', showImportModal);
+            document.getElementById('import-btn-2').addEventListener('click', showImportModal);
+            document.getElementById('delete-btn').addEventListener('click', confirmDeleteData);
+            document.getElementById('delete-btn-2').addEventListener('click', confirmDeleteData);
+            
+            // 设置弹窗关闭按钮
+            document.getElementById('close-export-modal').addEventListener('click', () => {
+                document.getElementById('export-modal').style.display = 'none';
+            });
+            
+            document.getElementById('close-import-modal').addEventListener('click', () => {
+                document.getElementById('import-modal').style.display = 'none';
+            });
+            
+            document.getElementById('copy-btn').addEventListener('click', copyExportData);
+            document.getElementById('confirm-import-btn').addEventListener('click', importData);
+            
+            // 设置展示页面搜索和筛选
+            document.getElementById('search-input').addEventListener('input', renderCollectionPage);
+            document.getElementById('show-undrawn').addEventListener('change', renderCollectionPage);
+            
+            // 初始渲染
+            updateDrawCount();
+            renderCollectionPage();
+            
+            // 设置弹窗中的头像
+            document.getElementById('export-avatar').src = friendLinks[0].image;
+            document.getElementById('import-avatar').src = friendLinks[1].image;
+        }
+        
+        // 从localStorage加载数据
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    lotteryData = JSON.parse(saved);
+                } catch (e) {
+                    console.error('加载数据失败:', e);
+                    lotteryData = { drawn: {}, stats: { totalDraws: 0, lastDrawTime: null } };
+                }
+            }
+        }
+        
+        // 保存数据到localStorage
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(lotteryData));
+            updateDrawCount();
+        }
+        
+        // 更新抽取计数显示
+        function updateDrawCount() {
+            const drawnCount = Object.keys(lotteryData.drawn).length;
+            document.getElementById('drawn-count').textContent = drawnCount;
+            document.getElementById('total-count').textContent = friendLinks.length;
+        }
+        
+        // 开始抽奖
+        function startLottery() {
+            if (isDrawing) return;
+            
+            isDrawing = true;
+            drawBtn.disabled = true;
+            
+            // 随机选择友链和品质
+            const linkId = Math.floor(Math.random() * friendLinks.length);
+            const qualityId = Math.floor(Math.random() * qualities.length);
+            const link = friendLinks[linkId];
+            const quality = qualities[qualityId];
+            
+            // 记录抽取结果
+            if (!lotteryData.drawn[link.id]) {
+                lotteryData.drawn[link.id] = [];
+            }
+            
+            if (!lotteryData.drawn[link.id].includes(quality.id)) {
+                lotteryData.drawn[link.id].push(quality.id);
+            }
+            
+            lotteryData.stats.totalDraws++;
+            lotteryData.stats.lastDrawTime = new Date().toISOString();
+            saveData();
+            
+            // 准备卡牌内容
+            const frontContent = `
+                <img src="${link.image}" alt="${link.name}" class="card-image">
+                <div class="card-name">${link.name}</div>
+                <div class="card-desc">${link.description}</div>
+                <a href="${link.url}" target="_blank" class="card-url">${link.url}</a>
+            `;
+            
+            // 设置卡牌品质样式
+            cardFront.className = `card-face card-front ${quality.className}`;
+            
+            // 更新卡牌背面显示
+            cardBack.innerHTML = `<div>${link.name}<br><small>${quality.name}品质</small></div>`;
+            
+            // 执行旋转动画
+            animateCard(frontContent, link, quality);
+        }
+        
+        // 执行卡牌旋转动画
+        function animateCard(frontContent, link, quality) {
+            const totalRotations = 5 + Math.floor(Math.random() * 3); // 5-7圈
+            const duration = 2000; // 总持续时间2秒
+            const startTime = Date.now();
+            
+            // 动画函数
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // 使用缓动函数：开始快，结束慢
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                
+                // 计算当前旋转角度
+                const currentRotations = totalRotations * easeProgress;
+                const currentAngle = currentRotations * 360;
+                
+                // 应用旋转
+                card.style.transform = `rotateY(${currentAngle}deg)`;
+                
+                // 在背面朝外时更新内容
+                const rotationMod = currentAngle % 360;
+                if (rotationMod >= 90 && rotationMod <= 270) {
+                    // 背面朝外
+                    if (!cardFront.innerHTML) {
+                        cardFront.innerHTML = frontContent;
+                    }
+                }
+                
+                // 继续动画或结束
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // 动画结束
+                    cardFront.innerHTML = frontContent;
+                    isDrawing = false;
+                    drawBtn.disabled = false;
+                    
+                    // 显示抽取结果提示
+                    setTimeout(() => {
+                        alert(`恭喜！你抽中了：${link.name} (${quality.name}品质)`);
+                    }, 300);
+                }
+            }
+            
+            // 开始动画
+            requestAnimationFrame(animate);
+        }
+        
+        // 渲染展示页面
+        function renderCollectionPage() {
+            renderProgressSection();
+            renderLinksGrid();
+        }
+        
+        // 渲染收集进度
+        function renderProgressSection() {
+            const progressSection = document.getElementById('progress-section');
+            const totalLinks = friendLinks.length;
+            
+            let progressHTML = '';
+            
+            qualities.forEach(quality => {
+                // 计算该品质已收集的友链数量
+                let count = 0;
+                for (const linkId in lotteryData.drawn) {
+                    if (lotteryData.drawn[linkId].includes(quality.id)) {
+                        count++;
+                    }
+                }
+                
+                const percentage = totalLinks > 0 ? Math.round((count / totalLinks) * 100) : 0;
+                
+                progressHTML += `
+                    <div class="quality-progress">
+                        <div class="progress-header">
+                            <span>${quality.name}品质</span>
+                            <span>${count}/${totalLinks}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${quality.className}" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            progressSection.innerHTML = progressHTML;
+        }
+        
+        // 渲染友链网格
+        function renderLinksGrid() {
+            const linksGrid = document.getElementById('links-grid');
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const showUndrawn = document.getElementById('show-undrawn').checked;
+            
+            let linksHTML = '';
+            
+            // 对友链进行排序：按最高品质和是否已抽取排序
+            const sortedLinks = [...friendLinks].sort((a, b) => {
+                const aDrawn = lotteryData.drawn[a.id] || [];
+                const bDrawn = lotteryData.drawn[b.id] || [];
+                
+                // 已抽取的排在前面
+                if (aDrawn.length > 0 && bDrawn.length === 0) return -1;
+                if (aDrawn.length === 0 && bDrawn.length > 0) return 1;
+                
+                // 按最高品质排序
+                const aMaxQuality = aDrawn.length > 0 ? Math.max(...aDrawn) : -1;
+                const bMaxQuality = bDrawn.length > 0 ? Math.max(...bDrawn) : -1;
+                
+                if (aMaxQuality !== bMaxQuality) return bMaxQuality - aMaxQuality;
+                
+                // 按抽取次数排序
+                return (bDrawn.length || 0) - (aDrawn.length || 0);
+            });
+            
+            sortedLinks.forEach(link => {
+                // 筛选：根据搜索词和是否显示未抽取
+                const drawnQualities = lotteryData.drawn[link.id] || [];
+                const isDrawn = drawnQualities.length > 0;
+                
+                if (!showUndrawn && !isDrawn) return;
+                if (searchQuery && !link.name.toLowerCase().includes(searchQuery) && 
+                    !link.description.toLowerCase().includes(searchQuery)) return;
+                
+                // 确定最高品质
+                const maxQuality = isDrawn ? Math.max(...drawnQualities) : -1;
+                const quality = maxQuality >= 0 ? qualities[maxQuality] : qualities[0];
+                
+                // 计算各品质抽取次数
+                const qualityCounts = {};
+                qualities.forEach(q => {
+                    qualityCounts[q.id] = 0;
+                });
+                
+                if (isDrawn) {
+                    drawnQualities.forEach(qId => {
+                        qualityCounts[qId]++;
+                    });
+                }
+                
+                // 生成品质统计矩形
+                let qualityStatsHTML = '';
+                qualities.forEach(q => {
+                    const count = qualityCounts[q.id];
+                    let fontSizeClass = '';
+                    if (count >= 100) fontSizeClass = 'xsmall-font';
+                    else if (count >= 10) fontSizeClass = 'small-font';
+                    
+                    qualityStatsHTML += `
+                        <div class="quality-stat">
+                            <div class="stat-rect ${q.className} ${fontSizeClass} ${count === 0 ? 'quality-default' : ''}" 
+                                 style="${count === 0 ? 'background-color: #eee; color: #999;' : ''}">
+                                ${count}
+                            </div>
+                            <div class="stat-label">${q.name}</div>
+                        </div>
+                    `;
+                });
+                
+                linksHTML += `
+                    <div class="link-card ${!isDrawn ? 'not-drawn' : ''}">
+                        <div class="link-card-header">
+                            <img src="${link.image}" alt="${link.name}" class="link-avatar">
+                            <div class="link-info">
+                                <div class="link-name">${isDrawn ? link.name : '？？？'}</div>
+                                <a href="${isDrawn ? link.url : '#'}" target="_blank" class="link-url">${isDrawn ? link.url : '？？？'}</a>
+                            </div>
+                            ${isDrawn ? `<div class="quality-badge ${quality.className}">${quality.name}</div>` : ''}
+                        </div>
+                        <div class="link-desc">${isDrawn ? link.description : '？？？'}</div>
+                        <div class="quality-stats">
+                            ${qualityStatsHTML}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            linksGrid.innerHTML = linksHTML;
+        }
+        
+        // 作弊：一键解锁所有友链
+        function cheatUnlockAll() {
+            if (!confirm('确定要一键解锁所有友链吗？这将为每个友链随机分配1-3种品质。')) return;
+            
+            friendLinks.forEach(link => {
+                if (!lotteryData.drawn[link.id]) {
+                    lotteryData.drawn[link.id] = [];
+                }
+                
+                // 随机分配1-3种品质
+                const numQualities = 1 + Math.floor(Math.random() * 3);
+                const availableQualities = [...qualities.map(q => q.id)];
+                
+                for (let i = 0; i < numQualities; i++) {
+                    if (availableQualities.length === 0) break;
+                    
+                    const randomIndex = Math.floor(Math.random() * availableQualities.length);
+                    const qualityId = availableQualities[randomIndex];
+                    
+                    if (!lotteryData.drawn[link.id].includes(qualityId)) {
+                        lotteryData.drawn[link.id].push(qualityId);
+                    }
+                    
+                    availableQualities.splice(randomIndex, 1);
+                }
+            });
+            
+            lotteryData.stats.totalDraws = friendLinks.length * 2;
+            lotteryData.stats.lastDrawTime = new Date().toISOString();
+            saveData();
+            renderCollectionPage();
+            alert('已解锁所有友链！');
+        }
+        
+        // 显示导出弹窗
+        function showExportModal() {
+            const exportData = {
+                version: '1.0',
+                generated: new Date().toISOString(),
+                data: lotteryData,
+                friendLinksCount: friendLinks.length
+            };
+            
+            document.getElementById('export-data').value = JSON.stringify(exportData, null, 2);
+            document.getElementById('export-modal').style.display = 'flex';
+        }
+        
+        // 显示导入弹窗
+        function showImportModal() {
+            document.getElementById('import-data').value = '';
+            document.getElementById('import-error').style.display = 'none';
+            document.getElementById('import-modal').style.display = 'flex';
+        }
+        
+        // 复制导出数据
+        function copyExportData() {
+            const textarea = document.getElementById('export-data');
+            textarea.select();
+            document.execCommand('copy');
+            
+            const copyBtn = document.getElementById('copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '已复制！';
+            
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        }
+        
+        // 导入数据
+        function importData() {
+            const importText = document.getElementById('import-data').value.trim();
+            const errorDiv = document.getElementById('import-error');
+            
+            if (!importText) {
+                errorDiv.textContent = '请输入要导入的数据';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const importedData = JSON.parse(importText);
+                
+                // 验证数据格式
+                if (!importedData.data || !importedData.data.drawn || !importedData.data.stats) {
+                    throw new Error('数据格式不正确');
+                }
+                
+                if (!confirm('导入数据将覆盖当前的所有抽奖记录，确定要导入吗？')) {
+                    return;
+                }
+                
+                lotteryData = importedData.data;
+                saveData();
+                renderCollectionPage();
+                
+                // 关闭弹窗
+                document.getElementById('import-modal').style.display = 'none';
+                alert('数据导入成功！');
+                
+            } catch (e) {
+                errorDiv.textContent = '导入失败：' + e.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        // 确认删除数据
+        function confirmDeleteData() {
+            if (!confirm('确定要删除所有抽奖数据吗？此操作不可撤销！')) return;
+            
+            if (confirm('最后确认：你真的要删除所有数据吗？')) {
+                lotteryData = { drawn: {}, stats: { totalDraws: 0, lastDrawTime: null } };
+                saveData();
+                renderCollectionPage();
+                alert('所有数据已删除！');
+            }
+        }
+    </script>
+</body>
+</html>
