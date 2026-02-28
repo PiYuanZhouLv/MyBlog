@@ -6,7 +6,7 @@ tags:
 
 上传一下GeekChallenge的WP
 
-老登太可恶了，没有拿到奖QwQ
+老小登太可恶了，没有拿到奖QwQ
 
 不过只有我的部分，也就是说大部分Crypto都没有欧（
 

@@ -1439,6 +1439,18 @@
         .scroll-no-bar {
             overflow: scroll;
         }
+
+        .link-needed {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: var(--color-background-2);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -1686,6 +1698,19 @@
 
     <!-- 导入数据输入框 -->
     <input type="file" id="import-file" style="display: none;" accept=".json">
+
+    <div class="link-needed">
+        <span style="font-size: 1.2em; font-weight: bold">求友链！<span style="font-size: 1.2em; font-weight: bold">求友链！<span style="font-size: 1.2em; font-weight: bold">求友链！</span></span></span>
+        <div>恳求各位大手子的友链，不论你是大佬还是萌新，都可以来投友链</div>
+        <div>工具也可以，原则上只收开源/免费工具</div>
+        <div>若要提交友链，请以任意一种方式联系我，并提供以下内容</div>
+        <div style="display: flex; gap: 0 30px; flex-wrap: wrap; justify-content: center;">
+            <div>1. 显示名称 (如：XXX的博客)</div>
+            <div>2. 一段简介 (用于详情页显示)</div>
+            <div>3. URL (用于显示、跳转的网址)</div>
+            <div>4. Icon (用于展示的图标，建议为方形，格式为img标签可显示的即可，最大显示大小为200px/200px，不宜过大)</div>
+        </div>
+    </div>
 
     <div style="height: 60px;"></div>
 
@@ -1966,41 +1991,56 @@
 
                 loadingText.textContent = '正在加载友链图片...';
 
-                friends.forEach((friend, index) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        imagesLoaded++;
-                        imageCache[friend.avatar] = img;
-                        updateLoadingProgress();
+                friends.forEach(async (friend, index) => {
+                    // const img = new Image();
+                    // img.onload = () => {
+                    //     imagesLoaded++;
+                    //     imageCache[friend.avatar] = img;
+                    //     updateLoadingProgress();
 
-                        if (imagesLoaded === totalImages) {
+                    //     if (imagesLoaded === totalImages) {
+                    //         setTimeout(() => {
+                    //             loadingOverlay.style.opacity = '0';
+                    //             setTimeout(() => {
+                    //                 loadingOverlay.style.display = 'none';
+                    //                 resolve();
+                    //             }, 300);
+                    //         }, 500);
+                    //     }
+                    // };
+
+                    // img.onerror = () => {
+                    //     imagesLoaded++;
+                    //     updateLoadingProgress();
+                    //     console.warn(`图片加载失败: ${friend.avatar}`);
+
+                    //     if (imagesLoaded === totalImages) {
+                    //         setTimeout(() => {
+                    //             loadingOverlay.style.opacity = '0';
+                    //             setTimeout(() => {
+                    //                 loadingOverlay.style.display = 'none';
+                    //                 resolve();
+                    //             }, 300);
+                    //         }, 500);
+                    //     }
+                    // };
+
+                    const response = await fetch(friend.avatar);
+                    const blob = await response.blob();
+                    const cachedURL = URL.createObjectURL(blob);
+                    console.log(`Cached image ${friend.avatar} => ${cachedURL}`);
+                    imagesLoaded++;
+                    updateLoadingProgress();
+                    friend.avatar = cachedURL;
+                    if (imagesLoaded === totalImages) {
+                        setTimeout(() => {
+                            loadingOverlay.style.opacity = '0';
                             setTimeout(() => {
-                                loadingOverlay.style.opacity = '0';
-                                setTimeout(() => {
-                                    loadingOverlay.style.display = 'none';
-                                    resolve();
-                                }, 300);
-                            }, 500);
-                        }
-                    };
-
-                    img.onerror = () => {
-                        imagesLoaded++;
-                        updateLoadingProgress();
-                        console.warn(`图片加载失败: ${friend.avatar}`);
-
-                        if (imagesLoaded === totalImages) {
-                            setTimeout(() => {
-                                loadingOverlay.style.opacity = '0';
-                                setTimeout(() => {
-                                    loadingOverlay.style.display = 'none';
-                                    resolve();
-                                }, 300);
-                            }, 500);
-                        }
-                    };
-
-                    img.src = friend.avatar;
+                                loadingOverlay.style.display = 'none';
+                                resolve();
+                            }, 300);
+                        }, 500);
+                    }
                 });
             });
         }

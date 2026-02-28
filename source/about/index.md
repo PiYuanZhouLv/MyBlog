@@ -5,7 +5,7 @@ date: 2025-10-30 16:16:29
 
 <div>
 
-<img src="/images/logo.png" style="width: min(280px, min(30vh, 30vw)); height: min(280px, min(30vh, 30vw)); float: right; border-radius: 10px">
+<img src="/images/logo.png" style="width: min(280px, min(30vh, 30vw)); height: min(280px, min(30vh, 30vw)); float: right; border-radius: 10px; margin: 10px">
 
 <style>
     #studyIn:hover {
@@ -17,7 +17,8 @@ date: 2025-10-30 16:16:29
 
 个人介绍就算了吧，真的很懒！
 
-也许下面会随机刷新友链？
+~~也许下面会随机刷新友链？~~
+友链请移步[友链抽奖机](/friends)~，欢迎各位大佬/萌新前来投友链，投友链请注明：显示名称、简介、URL、Icon，以任意一种方式联系我即可
 
 </div>
 
