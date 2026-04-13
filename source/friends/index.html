@@ -1599,6 +1599,8 @@
             <div class="control-group">
                 <input type="checkbox" id="show-unobtained" class="checkbox" checked>
                 <label for="show-unobtained">显示未抽中的友链</label>
+                <input type="checkbox" id="show-example" class="checkbox">
+                <label for="show-example">显示测试友链</label>
             </div>
             <button class="button" id="cheat-unlock">一键解锁（普通品质）</button>
         </div>
@@ -1708,7 +1710,18 @@
             <div>1. 显示名称 (如：XXX的博客)</div>
             <div>2. 一段简介 (用于详情页显示)</div>
             <div>3. URL (用于显示、跳转的网址)</div>
-            <div>4. Icon (用于展示的图标，建议为方形，格式为img标签可显示的即可，最大显示大小为200px/200px，不宜过大)</div>
+            <div>4. Icon (用于展示的图标，建议为方形，格式为img标签可显示的即可，最大显示大小为200px/200px，不宜过大，可以为URL)</div>
+        </div>
+    </div>
+
+    <div class="link-needed">
+        <span style="font-size: 1.2em; font-weight: bold">++我？</span>
+        <div>如果你想在你的网站上添加我的友链（这是不必要的），下面是一些基本信息</div>
+        <div style="display: flex; gap: 0 30px; flex-wrap: wrap; justify-content: center;">
+            <div>名称：圆周率的废纸堆</div>
+            <div>简介：圆周率的废纸堆，里面或许有你需要的？</div>
+            <div>URL：https://piyuanzhoulv.github.io/</div>
+            <div>Icon：https://piyuanzhoulv.github.io/images/logo.png</div>
         </div>
     </div>
 
@@ -1726,7 +1739,13 @@
             { id: 6, name: "音乐分享", url: "https://musicbox.example.com", avatar: "https://picsum.photos/id/29/200/200", description: "发现好音乐，分享听歌心得" },
             { id: 7, name: "电影评论", url: "https://filmreview.example.com", avatar: "https://picsum.photos/id/31/200/200", description: "电影赏析与评论" },
             { id: 8, name: "健身指南", url: "https://fitnessguide.example.com", avatar: "https://picsum.photos/id/41/200/200", description: "科学健身方法与计划" },
-            { id: 9, name: "科技新闻", url: "https://technews.example.com", avatar: "https://picsum.photos/id/48/200/200", description: "最新科技动态与产品评测" }
+            { id: 9, name: "科技新闻", url: "https://technews.example.com", avatar: "https://picsum.photos/id/48/200/200", description: "最新科技动态与产品评测" },
+            
+            { id: 10, name: "Lochad", url: "https://www.cnblogs.com/Lochad", avatar: "avatar/Lochad.jpg", description: "试图从AI的虎口中夺食的小pwn手～"},
+            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: "https://kanade-chan.top/logo.png", description: "个人技术知识库与学习记录"},
+            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: "https://down.shengz.top/logo.jpg", description: "记录奋进的征程，书写人生的华章。"},
+            { id: 13, name: "CQ的博客", url: "http://www.smg1307.space/", avatar: "avatar/CQ.jpg", description: "逆向小废物"},
+            { id: 14, name: "kasora", url: "https://www.kasora.net/", avatar: "https://www.kasora.net/h.png", description: "CTFer, Arch Linux user"},
         ];
 
         // 品质定义和概率权重（已调整概率） - 按稀有度升序排列
@@ -1772,6 +1791,7 @@
         const progressBars = document.getElementById('progress-bars');
         const searchInput = document.getElementById('search');
         const showUnobtained = document.getElementById('show-unobtained');
+        const showExample = document.getElementById('show-example');
         const cheatUnlockBtn = document.getElementById('cheat-unlock');
         const importDataBtn = document.getElementById('import-data');
         const exportDataBtn = document.getElementById('export-data');
@@ -2025,10 +2045,16 @@
                     //     }
                     // };
 
-                    const response = await fetch(friend.avatar);
-                    const blob = await response.blob();
-                    const cachedURL = URL.createObjectURL(blob);
-                    console.log(`Cached image ${friend.avatar} => ${cachedURL}`);
+                    let cachedURL;
+                    try{
+                        const response = await fetch(friend.avatar);
+                        const blob = await response.blob();
+                        cachedURL = URL.createObjectURL(blob);
+                        console.log(`Cached image ${friend.avatar} => ${cachedURL}`);
+                    }catch(e){
+                        console.warn(`Error occured when caching ${friend.avatar}`+'\n', e);
+                        cachedURL = friend.avatar;
+                    }
                     imagesLoaded++;
                     updateLoadingProgress();
                     friend.avatar = cachedURL;
@@ -2304,6 +2330,7 @@
             // 展示页面控件
             searchInput.addEventListener('input', renderCollectionPage);
             showUnobtained.addEventListener('change', renderCollectionPage);
+            showExample.addEventListener('change', renderCollectionPage);
 
             // 数据管理按钮
             cheatUnlockBtn.addEventListener('click', cheatUnlockAll);
@@ -2725,6 +2752,7 @@
         function renderCollectionPage() {
             const searchTerm = searchInput.value.toLowerCase();
             const showUnobtainedChecked = showUnobtained.checked;
+            const showExampleChecked = showExample.checked;
 
             // 清空容器
             friendsContainer.innerHTML = '';
@@ -2748,6 +2776,8 @@
 
                 // 如果不显示未获得且未获得，跳过
                 if (!showUnobtainedChecked && !hasObtained) return;
+
+                if (!showExampleChecked && friendId < 10) return;
 
                 // 获取最高品质
                 const bestQuality = getBestQuality(friendData);
