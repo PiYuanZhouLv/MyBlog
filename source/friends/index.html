@@ -2793,7 +2793,7 @@
                 friendCard.addEventListener('click', () => openFriendModal(friendId));
 
                 // 创建URL容器
-                const urlContainer = createUrlContainer(friend.url, hasObtained, true, 'small');
+                const urlContainer = createUrlContainer(friend.url, hasObtained, friendId >= 10, 'small');
 
                 // 卡片内容
                 friendCard.innerHTML = `
@@ -2935,7 +2935,7 @@
 
             // 设置URL容器
             modalUrlContainer.innerHTML = '';
-            const urlContainer = createUrlContainer(friend.url, hasObtained, true, 'large');
+            const urlContainer = createUrlContainer(friend.url, hasObtained, friendId >= 10, 'large');
             const urlText = urlContainer.childNodes[0];
             urlText.classList.add("scroll-no-bar");
             let lasttime;
