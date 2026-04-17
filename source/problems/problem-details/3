@@ -1,0 +1,16 @@
+{
+    "desc": "<div class=\"tips warning\" style=\"text-align: center\">本题暂未完成，目前仅为占位界面，题目将于完成后立即上线</div>",
+    "attachments": [],
+    "server": [
+        ["server.py", "使用python运行server.py，无需其他依赖，若端口被占用，可以使用--port <PORT>指定其他端口", "TCP 127.0.0.1:11451", true]
+    ],
+    "tips": {
+        "hint": [],
+        "spoiler": [
+            ["咖啡壶……远程控制……或许可以查查RFC文档？", 2]
+        ],
+        "warning": []
+    },
+    "WP": "WP HTML here",
+    "flag": ["MD5(flag) here"]
+}

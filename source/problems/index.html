@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html class="night" lang="zh-CN" style="user-select: none;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每咕一题！</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="md5.min.js"></script>
+    <script>
+        colorScheme = localStorage.getItem('color-scheme') || 'auto';
+        colorScheme = colorScheme === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorScheme;
+        if (colorScheme === "light") {
+            let classlist = document.querySelector("html").classList;
+            classlist.remove('night');
+            classlist.add('light');
+        }
+        matchMedia('(prefers-color-scheme: dark)').addEventListener("change", () => {
+            colorScheme = localStorage.getItem('color-scheme') || 'auto';
+            scheme = colorScheme === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorScheme;
+            if (scheme === 'light') {
+                document.getElementById("sun").style.display = "none"
+                document.getElementById("moon").style.display = ""
+                let classlist = document.querySelector("html").classList
+                classlist.remove('night')
+                classlist.add('light')
+            } else {
+                document.getElementById("sun").style.display = ""
+                document.getElementById("moon").style.display = "none"
+                let classlist = document.querySelector("html").classList
+                classlist.add('night')
+                classlist.remove('light')
+            }
+        })
+    </script>
+    <style>
+        .night img {
+            opacity: 0.8;
+        }
+
+        img {
+            border: 1px solid;
+        }
+    </style>
+    <style>
+        :root {
+            --color-green: #e8f5e9;
+            --color-green-text: #2e7d32;
+            --color-blue: #e3f2fd;
+            --color-blue-text: #1565c0;
+            --color-gold: #fff8e1;
+            --color-gold-text: #ff8f00;
+            --color-red: #ffebee;
+            --color-red-text: #c62828;
+            --color-gray: #f5f5f5;
+            --color-gray-text: #9e9e9e;
+            --color-button-border: #ddd;
+            --color-button-hover: #f0f0f0;
+            --color-danger: #f44336;
+            --color-danger-hover: #d32f2f;
+            --color-success: #4caf50;
+            --color-warning: #ff9800;
+            --color-info: #2196f3;
+            --color-accent: #2bbc8a;
+        }
+
+        html.light {
+            --color-background: #FFFFFF;
+            --color-border: #666;
+            --color-scrollbar: #AAA;
+            --color-meta: #666;
+            --color-link: rgba(212, 128, 170, 1);
+            --color-text: #383838;
+            --color-accent-3: #8c8c8c;
+            --color-accent-2: #383838;
+            --color-accent-1: #2bbc8a;
+            --color-quote: #2bbc8a;
+
+            --color-background-2: hsl(0, 0%, 96%);
+            --color-default: var(--color-background);
+            --color-default-text: var(--color-text);
+            --color-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        html.night {
+            --color-background: #1d1f21;
+            --color-border: #908d8d;
+            --color-scrollbar: #999;
+            --color-meta: #908d8d;
+            --color-link: rgba(212, 128, 170, 1);
+            --color-text: #c9cacc;
+            --color-accent-3: #cccccc;
+            --color-accent-2: #eeeeee;
+            --color-accent-1: #2bbc8a;
+            --color-quote: #ccffb6;
+
+            --color-background-2: hsl(210, 6%, 24%);
+            --color-default: var(--color-background);
+            --color-default-text: var(--color-text);
+            --color-overlay: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Menlo", "Meslo LG", monospace;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        hr {
+            width: 100%;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-overlay);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .confirm-modal {
+            width: 90%;
+            max-width: 500px;
+            background-color: var(--color-background);
+            border-radius: 12px;
+            overflow: hidden;
+            user-select: text;
+        }
+
+        .confirm-modal-header {
+            padding: 25px 25px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .confirm-modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .confirm-modal-message {
+            color: var(--color-text);
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .confirm-modal-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .confirm-modal-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            user-select: none;
+        }
+
+        .confirm-modal-danger .confirm-modal-icon {
+            color: var(--color-danger);
+        }
+
+        .confirm-modal-actions {
+            padding: 20px;
+            background-color: var(--color-background-2);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .confirm-modal-button {
+            min-width: 100px;
+        }
+
+        .confirm-modal-button-danger {
+            background-color: var(--color-danger);
+            color: white;
+            border-color: var(--color-danger);
+        }
+
+        .confirm-modal-button-danger:hover {
+            background-color: var(--color-danger-hover);
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            border: 1px solid var(--color-button-border);
+            border-bottom-width: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+
+        .light button:hover {
+            filter: brightness(0.9);
+        }
+
+        .night button:hover {
+            filter: brightness(1.5);
+        }
+
+        .button-primary {
+            background-color: #333;
+            color: white;
+            border-color: #000;
+        }
+
+        .button-primary:hover {
+            background-color: #555;
+        }
+
+        .button-danger {
+            background-color: var(--color-background);
+            color: var(--color-danger);
+            border-color: var(--color-danger);
+        }
+
+        .button-danger:hover {
+            background-color: var(--color-danger);
+            color: white;
+        }
+
+        .button-success {
+            background-color: var(--color-background);
+            color: var(--color-success);
+            border-color: var(--color-success);
+        }
+
+        .button-success:hover {
+            background-color: var(--color-success);
+            color: white;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 300px;
+        }
+
+        .toast {
+            padding: 12px 16px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease-out forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.hide {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        .toast.success {
+            background-color: var(--color-success);
+        }
+
+        .toast.error {
+            background-color: var(--color-danger);
+        }
+
+        .toast.info {
+            background-color: var(--color-info);
+        }
+
+        .toast.warning {
+            background-color: var(--color-warning);
+        }
+
+        .toast-icon {
+            font-size: 18px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            overflow: auto;
+            height: calc(100vh - 40px);
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        #problem-page.active {
+            position: absolute;
+            z-index: 1000;
+            top: 0;
+        }
+
+        .tag {
+            border: 1px solid oklch(0.4598 0.093 var(--hue));
+            color: oklch(0.5661 0.1872 var(--hue));
+            background-color: oklch(0.88 0.1368 var(--hue));
+            border-radius: 0.5lh;
+            padding: 0 0.5lh;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .tag::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border: 1px solid;
+            background-color: currentColor;
+            border-radius: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .tag.deactive {
+            border: 1px solid oklch(0.4598 0.022 var(--hue));
+            color: oklch(0.5661 0.022 var(--hue));
+            background-color: oklch(0.88 0.022 var(--hue));
+        }
+
+        .tag.deactive::before {
+            background-color: transparent;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            border: 1px dashed;
+            padding: 5px;
+            border-radius: 5px;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .problem-card .tag,
+        #problem-page .tag {
+            cursor: unset;
+        }
+
+        input {
+            background-color: transparent;
+            border: var(--color-border) 1px solid;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 0.9em;
+            color: currentColor;
+        }
+
+        .problem-card {
+            display: grid;
+            grid-template-areas:
+                'a a'
+                'b b'
+                'c d'
+                'e d';
+            justify-items: start;
+            border: 1px solid;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            align-items: center;
+        }
+
+        .problem-card>*:nth-child(1) {
+            grid-area: a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .problem-card>*:nth-child(1)>*:nth-child(1) {
+            font-size: 1.5em;
+        }
+
+        .problem-card>*:nth-child(2) {
+            grid-area: b;
+        }
+
+        .problem-card>*:nth-child(3) {
+            grid-area: c;
+            border: none;
+        }
+
+        .problem-card>*:nth-child(4) {
+            grid-area: d;
+            display: flex;
+            flex-direction: column;
+            justify-self: right;
+        }
+
+        .problem-card>*:nth-child(5) {
+            grid-area: e;
+        }
+
+        .problem-card:hover {
+            transform: scale(1.05);
+            transform-origin: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nothing-found {
+            background-color: var(--color-background-2);
+            border: 1px solid;
+            padding: 30px;
+            margin: 50px;
+        }
+
+        #problem-maincontent>* {
+            padding: 20px;
+            width: 100%;
+            border: 1px solid;
+            border-bottom: none;
+        }
+
+        #problem-maincontent>*:nth-last-child(1) {
+            border-bottom: 1px solid;
+        }
+
+        #problem-maincontent>*:nth-child(1)>*:nth-child(1) {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #problem-maincontent>*:nth-child(1) {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        #problem-maincontent>*:nth-child(1)>*:nth-child(1)>*:nth-child(1) {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #problem-maincontent>*:nth-child(1)>*:nth-child(1)>*:nth-child(1)>*:nth-child(1) {
+            font-size: 1.5em;
+        }
+
+        #problem-maincontent>*:nth-child(2) {
+            user-select: text;
+            text-align: left;
+        }
+
+        .tips.hint {
+            border: 1px var(--color-warning) solid;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: color-mix(in oklch, #fff 80%, var(--color-warning));
+            color: var(--color-warning);
+        }
+
+        .tips.warning {
+            border: 1px var(--color-danger) solid;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: color-mix(in oklch, #fff 70%, var(--color-danger));
+            color: var(--color-danger);
+        }
+
+        #problem-maincontent>*:nth-child(3) {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            user-select: text;
+        }
+
+        summary {
+            user-select: none;
+        }
+
+        details:open>summary {
+            border-bottom: 1px solid;
+        }
+
+        a {
+            border: 1px solid;
+            padding: 5px;
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        a[data-blackbox]:hover {
+            color: var(--color-danger);
+        }
+
+        #problem-maincontent>*:nth-child(4) {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #problem-maincontent>*:nth-child(5)>div {
+            border: 1px solid;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        #problem-maincontent>*:nth-child(5) code {
+            padding: 5px;
+            user-select: all;
+        }
+
+        #problem-maincontent>*:nth-child(7) {
+            user-select: text;
+            text-align: left;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        #problem-maincontent>*:nth-child(7)>summary {
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.3em !important;
+        }
+
+        pre {
+            font-size: 1em;
+            line-height: 1.2;
+        }
+
+        pre>code {
+            border: none !important;
+        }
+
+        .filling {
+            flex: 1;
+            min-height: 0;
+        }
+
+        #help-page {
+            background-color: var(--color-background);
+            position: absolute;
+            z-index: 800;
+        }
+    </style>
+</head>
+
+<body style="transition: 0.3s; text-align: center; font-size: 1.3em; overflow: hidden;">
+
+    <div style="position: fixed; right: 0; bottom: 0; z-index: 999; margin: 10px;">
+        <button id="sun" style="border: none; background: none; color:white; cursor: pointer;"
+            onclick="switchColorScheme('light')"><svg style="width: 25px; height: 25px;"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path
+                    d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z">
+                </path>
+            </svg></button>
+        <button id="moon" style="border: none; background: none; color: black; cursor: pointer; display: none;"
+            onclick="switchColorScheme('night')"><svg style="width: 25px; height: 25px;"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path
+                    d="M11.3807 2.01886C9.91573 3.38768 9 5.3369 9 7.49999C9 11.6421 12.3579 15 16.5 15C18.6631 15 20.6123 14.0843 21.9811 12.6193C21.6613 17.8537 17.3149 22 12 22C6.47715 22 2 17.5228 2 12C2 6.68514 6.14629 2.33869 11.3807 2.01886Z">
+                </path>
+            </svg></button>
+    </div>
+    <script>
+        colorScheme = localStorage.getItem('color-scheme') || 'auto'
+        colorScheme = colorScheme === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorScheme
+        if (colorScheme === 'light') {
+            document.getElementById("sun").style.display = "none"
+            document.getElementById("moon").style.display = ""
+        } else {
+            document.getElementById("sun").style.display = ""
+            document.getElementById("moon").style.display = "none"
+        }
+        function switchColorScheme(scheme) {
+            localStorage.setItem("color-scheme", scheme)
+            if (scheme === 'light') {
+                document.getElementById("sun").style.display = "none"
+                document.getElementById("moon").style.display = ""
+                let classlist = document.querySelector("html").classList
+                classlist.remove('night')
+                classlist.add('light')
+            } else {
+                document.getElementById("sun").style.display = ""
+                document.getElementById("moon").style.display = "none"
+                let classlist = document.querySelector("html").classList
+                classlist.add('night')
+                classlist.remove('light')
+            }
+        }
+    </script>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <main style="position: relative;">
+
+        <div id="index-page" class="page active">
+            <header style="display: flex; flex-direction: column; align-items: center;">
+                <div
+                    style="display: flex; justify-content: space-evenly; align-items: center; width: 100%; flex-wrap: wrap; margin: 20px;">
+                    <button onclick="location.href = '/';" style="position: relative;z-index: 500;">&lt;返回首页</button>
+                    <div style="font-size: 50px; font-weight: bold;">每<span id="title-freq">咕</span>一题</div>
+                    <button onclick="openHelp()" style="position: relative;z-index: 501;">这是什么?</button>
+                </div>
+                <div
+                    style="background-color: var(--color-background-2); max-width: fit-content; border: 1px solid; border-radius: 10px; padding: 10px;">
+                    这里收录了圆周率给大家出的<del>题</del><ins>史</ins>，欢迎品尝！<br>
+                    对了，众所周知，这是个静态网站，所以没有什么防护措施，F12里能看到提示什么的也是非常正常的啦，不许作弊！
+                </div>
+            </header>
+
+            <section
+                style="border: 1px solid; padding: 10px; display: flex; justify-content: space-evenly; flex-wrap: wrap; align-items: center; max-width: fit-content; gap: 10px;">
+                <label>搜索：<input id="search"></label>
+                <div id="solve-tags" class="tag-list">
+                    <span class="tag" style="--hue: 158">已解出</span>
+                    <span class="tag" style="--hue: 86">部分解出</span>
+                    <span class="tag" style="--hue: 4">未解出</span>
+                </div>
+                <div id="category-tags" class="tag-list"></div>
+                <div id="desc-tags" class="tag-list"></div>
+            </section>
+
+            <section id="problem-list" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+            </section>
+
+            <nav style="display: flex;align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button onclick="pagecount--; renderProblemList();">Prev</button><div><span
+                    id="current-pagecount"></span>/<span id="total-pagecount"></span>页</div><button
+                    onclick="pagecount++; renderProblemList();">Next</button><div>共<span id="search-count"></span>条结果</div>
+            </nav>
+
+            <div style="height: 60px;"></div>
+
+        </div>
+
+        <div id="problem-page" class="page"
+            style="gap: 0; background-color: var(--color-background); align-items: stretch;"></div>
+
+        <div id="help-page" class="page">
+            <button onclick="closeHelp()" style="position: absolute; top: 30px; right: 30px;">x</button>
+            <h2>这是什么?</h2>
+            <p>这是圆周率给大家出的题的合集，你可以在这上面找到题目的附件，并且可以提交flag验证是否正确！</p>
+            <p>小彩蛋：这个网页采取了伪后端的设计，你能看到好似有后端的API调用，事实上，这是一个完完全全的静态网站！</p>
+            <hr>
+            <figure>
+                <img src="files/5c0edd1c14550171b394c2e75fee698e.png" style="max-width: 80%;">
+                <figcaption>主界面</figcaption>
+            </figure>
+            <p>这是每咕一题的主界面，之所以叫每咕一题，是因为圆周率比较懒，大概率不能持续更新，所以就叫每咕一题吧！</p>
+            <p>搜索框可以搜索标题/简介，由于圆周率比较懒，只忽略了大小写，然后做全文匹配；tag点击可以切换筛选，这里做了一个小操作，会把全选和全部选等价，也就是说，如果你只想看没做过的题，点击一次“未解出”就好了~</p>
+            <p>同一筛选之间采用“或”的逻辑连接，不同筛选之间采取“和”的逻辑连接</p>
+            <p>小彩蛋：每咕一题的标题会根据最后一道题的出题时间变化；部分解出的题目在tag上会显示解出数/总flag数，而不是“部分解出”；当一个标签没有被筛选中的时候会变成灰色，但由于目前的题目都只有一个tag，无法展现这一功能</p>
+            <p>点击题目卡片即可打开题目，下方还有换页和筛选统计，换页是循环的，你可以通过“Prev”快速到达最后一页</p>
+            <hr>
+            <figure>
+                <img src="files/be6c82ba22d77bbb95077e3309fef520.png" style="max-width: 80%;">
+                <figcaption>问题详情</figcaption>
+            </figure>
+            <p>这是问题详情页，里面有问题的内容及题解，你可以在这里验证flag是否正确</p>
+            <p>若要关闭页面，你可以：点击x、使用地址栏返回、按下ESC、点击题目外侧空白区域</p>
+            <p>第一行中有题目的名称，完成情况，tag以及一个返回按钮</p>
+            <p>第二行是题目的详细描述，可能会对做题有帮助</p>
+            <p>第三行是提示，分为提示/spoiler提示/警告三种，spoiler提示与做题思路相关程度较大（星级越高提示量越大，建议越靠后打开），打开时有确认框</p>
+            <p>第四行是附件栏，可以点击绿色链接下载附件</p>
+            <p>第五行是服务端附件栏，部分服务端附件是黑盒，将鼠标放上去时会变为红色，点击下载前有弹窗提醒；反之为白盒附件，可以查看分析，你可以找到其中硬编码的flag，但请按正常流程完成解题；后面有默认协议/端口，以及如何运行服务端的提示</p>
+            <p>第六行是flag提交栏，你可以在这里看到已解出/总flag数，可以将你找到的flag提交，网页会通过校验md5的方式来确认你是否找到了正确的flag</p>
+            <p>第七行是WP栏，你可以在这里看到本题的WP，打开前会有弹窗确认</p>
+            <p>小彩蛋：打开/关闭页面的动画参考了osu!，于是加上了ESC关闭的功能（更像了）；在浏览器失去焦点后，再点击外侧空白区域有500ms/1次的忽略点击操作，这样就不会因为复制flag回来的时候不小心点到外面导致问题页被关闭了~</p>
+            <hr>
+            <p>差不多就说到这吧~快按下ESC退出帮助页面开始你的解题之旅吧！更多有关内容可以查看<a href="/2026/02/28/小站修补琐记2/#2026-4-17-每咕一题调试完成上线" style="border: none;">这篇博客</a>或者<a href="https://github.com/PiYuanZhouLv/MyBlog/tree/main/source/problems/index.html" style="border: none;">源代码</a>哦</p>
+            <div style="height: 60px;"></div>
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="confirm-modal-overlay">
+        <div class="confirm-modal" id="confirm-modal">
+            <div class="confirm-modal-header">
+                <h3 class="confirm-modal-title" id="confirm-title">确认操作</h3>
+                <p class="confirm-modal-message" id="confirm-message"></p>
+            </div>
+            <div class="confirm-modal-content">
+                <div class="confirm-modal-icon" id="confirm-icon">⚠</div>
+            </div>
+            <div class="confirm-modal-actions">
+                <button class="button confirm-modal-button" id="confirm-ok">确认</button>
+                <button class="button confirm-modal-button" id="confirm-cancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cateTagAndHue = [
+            { name: "misc(musc)", hue: 286 },
+            { name: "web", hue: 222 },
+            { name: "crypto", hue: 93 },
+            { name: "re", hue: 53 },
+            { name: "pwn", hue: 0 },
+        ]
+        const descTagAndHue = [
+            { name: "新奇", hue: 189 },
+            { name: "all-in", hue: 0 },
+            { name: "基础", hue: 133 },
+            { name: "纯史", hue: 0 },
+        ]
+
+        const confirmModalOverlay = document.getElementById('confirm-modal-overlay');
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmTitle = document.getElementById('confirm-title');
+        const confirmMessage = document.getElementById('confirm-message');
+        const confirmIcon = document.getElementById('confirm-icon');
+        const confirmOk = document.getElementById('confirm-ok');
+        const confirmCancel = document.getElementById('confirm-cancel');
+
+        confirmModalOverlay.addEventListener("click", evt => evt.stopPropagation());
+
+        cateTagAndHue.forEach(item => {
+            const tagSpan = document.createElement("span");
+            tagSpan.style.setProperty("--hue", item.hue);
+            tagSpan.innerText = item.name;
+            tagSpan.classList.add('tag');
+            document.getElementById("category-tags").appendChild(tagSpan);
+        });
+
+        descTagAndHue.forEach(item => {
+            const tagSpan = document.createElement("span");
+            tagSpan.style.setProperty("--hue", item.hue);
+            tagSpan.innerText = item.name;
+            tagSpan.classList.add('tag');
+            document.getElementById("desc-tags").appendChild(tagSpan);
+        });
+
+        document.querySelectorAll('#index-page .tag').forEach(e => e.addEventListener("click", evt => {
+            if (![...evt.srcElement.parentElement.children].filter(elem => elem.classList.contains('deactive')).length) {
+                [...evt.srcElement.parentElement.children].forEach(elem => elem.classList.add("deactive"));
+            }
+            evt.srcElement.classList.toggle("deactive");
+            if (![...evt.srcElement.parentElement.children].filter(elem => !elem.classList.contains('deactive')).length) {
+                [...evt.srcElement.parentElement.children].forEach(elem => elem.classList.remove("deactive"));
+            }
+            pagecount = 0;
+            renderProblemList()
+        }));
+
+        function showConfirm(message, title = '确认', options = {}) {
+            return new Promise((resolve) => {
+                confirmTitle.textContent = title;
+                confirmMessage.textContent = message;
+                if (options.danger) {
+                    confirmIcon.textContent = '⚠';
+                    confirmIcon.style.color = 'var(--color-danger)';
+                    confirmOk.classList.add('button-danger');
+                } else {
+                    confirmIcon.textContent = '?';
+                    confirmIcon.style.color = 'var(--color-info)';
+                    confirmOk.classList.remove('button-danger');
+                }
+                confirmModalOverlay.classList.add('active');
+                const handleConfirm = () => {
+                    cleanup();
+                    resolve(true);
+                };
+                const handleCancel = () => {
+                    cleanup();
+                    resolve(false);
+                };
+                const handleOverlayClick = (e) => {
+                    if (e.target === confirmModalOverlay) {
+                        handleCancel();
+                    }
+                };
+                const cleanup = () => {
+                    confirmOk.removeEventListener('click', handleConfirm);
+                    confirmCancel.removeEventListener('click', handleCancel);
+                    confirmModalOverlay.removeEventListener('click', handleOverlayClick);
+                    confirmModalOverlay.classList.remove('active');
+                };
+                confirmOk.addEventListener('click', handleConfirm);
+                confirmCancel.addEventListener('click', handleCancel);
+                confirmModalOverlay.addEventListener('click', handleOverlayClick);
+            });
+        }
+
+        function showAlert(message, title = '提示', icon = 'ⓘ', button = '确认', options = {}) {
+            return new Promise((resolve) => {
+                confirmTitle.textContent = title;
+                confirmMessage.textContent = message;
+                confirmIcon.textContent = icon;
+                confirmOk.textContent = button;
+                confirmCancel.style.display = 'none';
+                if (options.danger) {
+                    confirmIcon.style.color = 'var(--color-danger)';
+                    confirmOk.classList.add('button-danger');
+                } else {
+                    confirmIcon.style.color = 'var(--color-info)';
+                    confirmOk.classList.remove('button-danger');
+                }
+                confirmModalOverlay.classList.add('active');
+                const handleClose = () => {
+                    cleanup();
+                    resolve();
+                };
+                const handleOverlayClick = (e) => {
+                    if (e.target === confirmModalOverlay) {
+                        handleClose();
+                    }
+                };
+                const cleanup = () => {
+                    confirmOk.removeEventListener('click', handleClose);
+                    confirmModalOverlay.removeEventListener('click', handleOverlayClick);
+                    confirmModalOverlay.classList.remove('active');
+                    confirmCancel.style.display = '';
+                    confirmOk.textContent = '确定';
+                };
+                confirmOk.addEventListener('click', handleClose);
+                confirmModalOverlay.addEventListener('click', handleOverlayClick);
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = '';
+            switch (type) {
+                case 'success':
+                    icon = '✓';
+                    break;
+                case 'error':
+                    icon = '✗';
+                    break;
+                case 'warning':
+                    icon = '⚠';
+                    break;
+                default:
+                    icon = 'ℹ';
+            }
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        const STORAGE_KEY = "gugugu_problems"
+        let solveData;
+
+        function loadData() {
+            try {
+                solveData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                if (!solveData) {
+                    throw new Error('Data not found.');
+                }
+                return solveData;
+            } catch {
+                solveData = { totalFlagCount: {}, solved: {}, confirmed: {}, completed: false }
+                saveData();
+                return solveData;
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(solveData));
+        }
+
+        let ignoreClick = false;
+        let clearIgnoreTimeout;
+        window.addEventListener("focus", () => {
+            console.log('foucs')
+            ignoreClick = true;
+            clearIgnoreTimeout = setTimeout(() => {
+                ignoreClick = false;
+                clearIgnoreTimeout = null;
+            }, 500);
+        })
+        function stopIgnoreClick() {
+            if (clearIgnoreTimeout) {
+                clearTimeout(clearIgnoreTimeout);
+            }
+            ignoreClick = false;
+        }
+
+        let helpOpened = false;
+        function openHelp() {
+            helpOpened = true;
+            document.getElementById("help-page").classList.add('active');
+            document.getElementById("help-page").scrollTop = 0;
+            document.getElementById("help-page").animate([{ top: '100vh', opacity: 0 }, { top: '0', opacity: 1 }], { duration: 300, fill: "forwards", easing: "ease-in-out" });
+        }
+
+        function closeHelp() {
+            helpOpened = false;
+            const pageElem = document.getElementById("help-page");
+            if (!pageElem.classList.contains('active')) return;
+            pageElem.animate([{ top: '0', opacity: 1 }, { top: '100vh', opacity: 0 }], { duration: 300, fill: "forwards", easing: "ease-in-out" }).finished.then(() => {
+                pageElem.classList.remove("active");
+            });
+        }
+
+        function doSearch() {
+            return Object.entries(problems).filter(kv => {
+                let [pid, item] = kv;
+                if (document.getElementById("search").value && !(item.title + item.desc.replace(/<.*?>/g, '')).toLowerCase().includes(document.getElementById("search").value.toLowerCase())) {
+                    return false;
+                }
+                if (![...document.querySelectorAll("#solve-tags .tag:not(.deactive)")].map(e => e.innerText).includes(!(solveData['solved'][pid] || []).length ? '未解出' : (solveData['solved'][pid].length == item['flag'] ? '已解出' : '部分解出'))) {
+                    return false;
+                }
+                if (!item["tags"].filter(t => [...document.querySelectorAll("#category-tags .tag:not(.deactive)")].map(e => e.innerText).includes(t)).length) {
+                    return false;
+                }
+                if (!item["tags"].filter(t => [...document.querySelectorAll("#desc-tags .tag:not(.deactive)")].map(e => e.innerText).includes(t)).length) {
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        function renderProblemList() {
+            document.getElementById("problem-list").innerHTML = "";
+            const searchResult = doSearch();
+            if (pagecount < 0) {
+                pagecount = Math.floor(searchResult.length / 10);
+            } else if (pagecount > Math.floor(searchResult.length / 10)) {
+                pagecount = 0;
+            }
+            searchResult.slice(10 * pagecount, 10 * pagecount + 10).forEach(kv => {
+                let [pid, item] = kv
+                const problemCard = document.createElement("div");
+                problemCard.classList.add("problem-card");
+                problemCard.dataset.pid = pid;
+                const titlebarDiv = document.createElement("div");
+                const titleSpan = document.createElement("span");
+                titleSpan.innerText = item["name"];
+                titlebarDiv.appendChild(titleSpan);
+                const statusTag = document.createElement("span");
+                statusTag.classList.add("tag");
+                if (!(solveData['solved'][pid] || []).length) {
+                    statusTag.innerText = "未解出";
+                    statusTag.style.setProperty("--hue", 4);
+                } else if (solveData['solved'][pid].length == item['flag']) {
+                    statusTag.innerText = "已解出";
+                    statusTag.style.setProperty("--hue", 158);
+                } else {
+                    statusTag.innerText = `${solveData['solved'][pid].length}/${item['flag']}`;
+                    statusTag.style.setProperty("--hue", 86);
+                }
+                titlebarDiv.appendChild(statusTag);
+                problemCard.appendChild(titlebarDiv);
+                const descSpan = document.createElement("span");
+                descSpan.innerText = item["desc"];
+                problemCard.appendChild(descSpan);
+                const tagListDiv = document.createElement("div");
+                tagListDiv.classList.add("tag-list");
+                item["tags"].forEach(tag => {
+                    const tagSpan = document.createElement("span");
+                    tagSpan.classList.add("tag");
+                    tagSpan.innerText = tag;
+                    tagSpan.style.setProperty("--hue", (cateTagAndHue.find(item => item.name == tag) || descTagAndHue.find(item => item.name == tag))["hue"]);
+                    if ([...document.querySelectorAll(".tag.deactive")].map(e => e.innerText).includes(tag)) {
+                        tagSpan.classList.add("deactive");
+                    }
+                    tagListDiv.appendChild(tagSpan);
+                })
+                problemCard.appendChild(tagListDiv);
+                const scoreListDiv = document.createElement("div");
+                Object.entries(item["diff"]).forEach(item => {
+                    const outerSpan = document.createElement("span");
+                    outerSpan.innerHTML = `${item[0]}：${item[1]}<span>${'▣'.repeat(item[1])}${'▢'.repeat(5 - item[1])}</span>`
+                    outerSpan.style.color = `color-mix(in oklch, oklch(0.7 0.3 0) ${20 * (item[1] - 1)}%, oklch(0.7 0.3 140))`
+                    scoreListDiv.appendChild(outerSpan);
+                })
+                problemCard.appendChild(scoreListDiv);
+                const pubDateSpan = document.createElement("span");
+                pubDateSpan.innerText = item["time"];
+                problemCard.appendChild(pubDateSpan);
+                problemCard.addEventListener("click", (pid => () => openProblem(pid))(pid))
+                document.getElementById("problem-list").appendChild(problemCard);
+            })
+            if (document.getElementById("problem-list").innerHTML === "") {
+                const nothingFound = document.createElement("div");
+                nothingFound.innerText = "Nothing was found within your search...\n什么都没有找到喵……";
+                nothingFound.classList.add('nothing-found')
+                document.getElementById("problem-list").append(nothingFound);
+            }
+            document.getElementById("search-count").innerText = searchResult.length;
+            document.getElementById("current-pagecount").innerText = searchResult.length ? pagecount + 1 : 0;
+            document.getElementById("total-pagecount").innerText = Math.ceil(searchResult.length / 10);
+        }
+
+        document.getElementById("search").addEventListener("input", () => {
+            pagecount = 0;
+            renderProblemList()
+        });
+
+        function hookDetailsOpen(elem) {
+            elem.addEventListener("toggle", async (evt) => {
+                if (elem.open && (!elem.dataset.confirmed || elem.dataset.confirmed == 'false')) {
+                    elem.open = false;
+                    if (await showConfirm('折叠框内含有与解题思路相关度较高的内容，您确定要展开吗？', 'Spoiler Alert!')) {
+                        elem.dataset.confirmed = true;
+                        let arr = solveData['confirmed'][currentDisplayedPid] || [];
+                        arr.push(elem.dataset.confirmId);
+                        solveData['confirmed'][currentDisplayedPid] = arr;
+                        saveData();
+                        elem.open = true;
+                    }
+                }
+            })
+        }
+
+        function removeHljsPrefix(elem) {
+            elem.classList.forEach(i => {
+                if (i.startsWith('hljs-')) {
+                    elem.classList.replace(i, i.slice(5));
+                }
+            });
+            [...elem.children].forEach(sub => removeHljsPrefix(sub));
+        }
+
+        let problemDetail;
+        let currentDisplayedPid = null;
+        async function showProblem(pid) {
+            if (!problems[pid]) return hideProblem();
+            if (currentDisplayedPid === pid && document.getElementById("problem-page").classList.contains('active')) return;
+            const detail = await (await fetch(`problem-details/${pid}`)).json();
+            problemDetail = detail;
+            problemDetail.pid = pid;
+            document.getElementById("problem-page").innerHTML = `
+<div class="filling"></div>
+<div id="problem-maincontent">
+    <div>
+        <span>
+            <span>
+                <span>${problems[pid]['name']}</span>
+                <span id="live-status" class="tag" style="--hue: ${!(solveData['solved'][pid] || []).length ? 4 : (solveData['solved'][pid].length == problems[pid]['flag'] ? 158 : 86)}">${!(solveData['solved'][pid] || []).length ? '未解出' : (solveData['solved'][pid].length == problems[pid]['flag'] ? '已解出' : '部分解出')}</span>
+            </span>
+            <div class="tag-list">
+                ${problems[pid]['tags'].map(tag => `<span class="tag" style="--hue: ${(cateTagAndHue.find(item => item.name == tag) || descTagAndHue.find(item => item.name == tag))["hue"]}">${tag}</span>`).join('')}
+            </div>
+        </span>
+        <button onclick="history.back()">x</button>
+    </div>
+    <div>
+        <h2 style="margin-top: 0;">题目描述</h2>
+        ${detail['desc']}
+    </div>
+    <div>
+        ${detail['tips']['hint'].map(hint => `<div class="tips hint">Hint: ${hint}</div>`).join('')}
+        ${detail['tips']['spoiler'].map((spoiler, i) => `<details class="tips hint" data-confirm-id="spoiler${~i}" data-confirmed=${(solveData['confirmed'][pid] || []).includes(`spoiler${~i}`)}><summary>Spoiler Hint (${spoiler[1]}${'★'.repeat(spoiler[1])}${'☆'.repeat(5 - spoiler[1])})</summary>${spoiler[0]}</details>`).join('')}
+        ${detail['tips']['warning'].map(warning => `<div class="tips warning">Warning: ${warning}</div>`).join('')}
+        ${(Object.values(detail['tips']).map(sub => sub.length)).reduce((x, y) => x + y) ? '' : '本题没有提示/警告'}
+    </div>
+    <div>
+        <span>附件:</span>
+        ${detail['attachments'].map(fn => `<a href="attachments/${pid}/${fn}" download>${fn}</a>`).join('') || '本题没有附件'}
+    </div>
+    <div>
+        <span>服务端:</span>
+        ${detail['server'].map(server => `<div><span>服务端附件:<a href="attachments/${pid}/${server[0]}" download data-blackbox=${server[3]}>${server[0]}</a></span><span>连接地址:<code>${server[2]}</code></span><button onclick="showAlert('${server[1]}', '运行方式')">点击查看运行方式</button></div>`).join('') || '本题没有服务端'}
+    </div>
+    <div>
+        提交flag:
+        <input id="answer" placeholder="flag{Y0ur_fl@g_h3re}" style="width: min(75%, 500px); padding: 12px 5px; border-radius: 5px 0 0 5px;"><button onclick="checkAnswer()">Submit</button>
+        (<span id="live-solve">${(solveData['solved'][pid] || []).length}</span>/${problems[pid]['flag']})
+    </div>
+    <details data-confirm-id="WP" data-confirmed=${(solveData['confirmed'][pid] || []).includes('WP')}>
+        <summary>查看题解（WP）</summary>
+        ${detail['WP']}
+    </details>
+</div>
+<div class="filling"></div>
+`;
+            document.querySelectorAll("#problem-page details").forEach(elem => hookDetailsOpen(elem));
+            document.querySelectorAll("a[download][data-blackbox=true]").forEach(e => e.addEventListener("click", evt => {
+                evt.preventDefault();
+                showAlert('这是一个黑盒附件，请勿在解题时阅读其中内容！', '黑盒附件提醒', '!!', '我知道了', { danger: true }).then(() => {
+                    const tempA = document.createElement('a');
+                    tempA.href = evt.srcElement.href;
+                    tempA.download = evt.srcElement.download;
+                    tempA.click();
+                    tempA.remove();
+                })
+            }))
+            hljs.highlightAll();
+            setTimeout(() => document.querySelectorAll('pre code').forEach(
+                elem => {
+                    elem.classList.add("code");
+                    elem.parentElement.classList.add("highlight");
+                    removeHljsPrefix(elem);
+                }
+            ), 10)
+            document.querySelectorAll(".filling").forEach(e => e.addEventListener("click", () => {
+                console.log('back')
+                if (ignoreClick) {
+                    stopIgnoreClick();
+                    return;
+                }
+                history.back();
+            }));
+            document.getElementById("problem-page").classList.add('active');
+            document.getElementById("problem-page").scrollTop = 0;
+            document.getElementById("problem-page").animate([{ top: '100vh', opacity: 0 }, { top: '0', opacity: 1 }], { duration: 300, fill: "forwards", easing: "ease-in-out" });
+            currentDisplayedPid = pid;
+        }
+
+        function hideProblem() {
+            if (!problemDetail && !currentDisplayedPid) return;
+            problemDetail = null;
+            currentDisplayedPid = null;
+            const pageElem = document.getElementById("problem-page");
+            if (!pageElem.classList.contains('active')) return;
+            pageElem.animate([{ top: '0', opacity: 1 }, { top: '100vh', opacity: 0 }], { duration: 300, fill: "forwards", easing: "ease-in-out" }).finished.then(() => {
+                pageElem.classList.remove("active");
+                renderProblemList();
+            });
+        }
+
+        function openProblem(pid) {
+            if (pid && problems[pid]) {
+                if (window.location.hash !== `#${pid}`) {
+                    window.location.hash = pid;
+                }
+            } else {
+                console.warn("invalid pid");
+            }
+        }
+
+        document.body.addEventListener("keydown", evt => {
+            if (evt.keyCode === 27) {
+                if (helpOpened) {
+                    closeHelp();
+                    return;
+                }
+                if (!currentDisplayedPid) {
+                    return;
+                }
+                history.back();
+            }
+        })
+
+        document.querySelector("html").addEventListener("click", () => {
+            if (ignoreClick) {
+                stopIgnoreClick();
+                return;
+            }
+            if (helpOpened) {
+                closeHelp();
+                return;
+            }
+            if (!currentDisplayedPid) {
+                return;
+            }
+            history.back();
+        });
+        document.querySelector("body").addEventListener("click", evt => evt.stopPropagation());
+
+        function checkAnswer() {
+            const hash = md5(document.getElementById('answer').value.trim());
+            if ((solveData['solved'][currentDisplayedPid] || []).includes(hash)) {
+                showToast('哎呀，这个flag已经提交过了捏', 'warning');
+            } else if (problemDetail['flag'].includes(hash)) {
+                showToast('恭喜您，回答正确！', 'success');
+                let arr = solveData['solved'][currentDisplayedPid] || [];
+                arr.push(hash);
+                solveData['solved'][currentDisplayedPid] = arr;
+                checkCompleted();
+                saveData();
+                document.getElementById("live-status").innerText = solveData['solved'][currentDisplayedPid].length == problems[currentDisplayedPid]['flag'] ? '已解出' : '部分解出';
+                document.getElementById("live-status").style.setProperty('--hue', solveData['solved'][currentDisplayedPid].length == problems[currentDisplayedPid]['flag'] ? 158 : 86);
+                document.getElementById("live-solve").innerText = arr.length;
+            } else {
+                showToast('哎呀，好像不对呢……', 'error');
+            }
+        }
+
+        function handleHashChange() {
+            const hash = window.location.hash.slice(1);
+            if (hash && problems[hash]) {
+                showProblem(hash);
+            } else {
+                hideProblem();
+            }
+        }
+
+        async function newFlagTip() {
+            let delProblem = [];
+            for (let pid in solveData['totalFlagCount']) {
+                if (!Object.keys(problems).includes(pid)) {
+                    delProblem.push(pid);
+                }
+            }
+            if (delProblem.length) {
+                await showAlert(`有 ${delProblem.length} 题(pid: ${delProblem.join(', ')})不见了！QAQ\n不用担心，将来如果这些题目恢复，你的做题记录也会恢复！`, "题目不见了", ':<', '好吧', { danger: true });
+            }
+            let newProblem = [];
+            for (let pid in problems) {
+                if (problems[pid]['flag'] > (solveData['totalFlagCount'][pid] || 0)) {
+                    newProblem.push(pid);
+                }
+            }
+            if (newProblem.length) {
+                await showAlert(`上新了 ${newProblem.length} 题(包含新增flag)，快去看看吧！`, "上新提醒", ';)', 'Go!Go!Go!');
+                solveData['completed'] = false;
+            }
+            solveData['totalFlagCount'] = {};
+            for (let pid in problems) {
+                solveData['totalFlagCount'][pid] = problems[pid]["flag"];
+            }
+            checkCompleted();
+            saveData();
+        }
+
+        function checkCompleted() {
+            if (solveData['completed']) {
+                return;
+            }
+            for (let pid in problems) {
+                if (problems[pid]['flag'] > (solveData['solved'][pid] || []).length) {
+                    return;
+                }
+            }
+            solveData['completed'] = true;
+            showAlert('恭喜你，找出了目前所有的flag！', '好耶，AK了！', '🥳', '好耶！');
+        }
+
+        let problems;
+        let pagecount = 0;
+        async function init() {
+            problems = await (await fetch('problem-list')).json();
+            const pbl = Object.values(problems);
+            const delta = Math.ceil((Date.now() - (new Date(pbl[pbl.length-1]['time']).getTime())) / (1000 * 60 * 60 * 24 * 7));
+            if(delta == 1){
+                document.getElementById("title-freq").innerText = '周';
+            }else if(delta<4){
+                document.getElementById("title-freq").innerText = `${delta}周`;
+            }else if(delta==4){
+                document.getElementById("title-freq").innerText = '月';
+            }else{
+                document.getElementById("title-freq").innerText = ['咕', '🕊'][Math.floor(Math.random()*2)];
+            }
+            loadData();
+            renderProblemList();
+            if (window.location.hash) {
+                const hash = window.location.hash;
+                history.replaceState(null, null, '#');
+                history.pushState(null, null, hash);
+            }
+            window.addEventListener("hashchange", handleHashChange);
+            handleHashChange();
+            newFlagTip();
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

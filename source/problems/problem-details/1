@@ -1,0 +1,14 @@
+{
+    "desc": "<p>群友：*我要用upx压缩7z！</p>\n<p>AI：upx是压缩可执行文件的！！</p>\n<p>我：🤔……欸🤓☝️，有了！！！</p>\n<br>\n<p>一段时间后……</p>\n<br>\n<p>我：搞定了！端出来给大家尝尝吧😋</p>",
+    "attachments": ["upx4all.zip"],
+    "server": [],
+    "tips": {
+        "hint": [
+            "本题是misc，了解一些re方面的知识和工具将有助于做题，但<i>理论上来讲</i>可以不用任何re知识和逆向软件解出"
+        ],
+        "spoiler": [],
+        "warning": []
+    },
+    "WP": "<h2>解题过程</h2>\n<p>解压得到<code>hello.exe</code>，die一下发现有upx</p>\n<p><img src=\"files/41fb1bc5cd377b5e598a14a2d585d7be.png\"></p>\n<p>直接<code>upx -d</code>脱壳，执行<code>upx -d hello.exe</code></p>\n<p><img src=\"files/f2a6e5cffec29333c5905a1c9bf6ab45.png\"></p>\n<p>接下来有几种可能的进展方式：</p>\n<p>1. <code>binwalk</code>发现rar</p>\n<p><img src=\"files/787e768b21f91c2346a0506a400fdcc3.png\"></p>\n<p>2. <code>strings</code>然后在一大堆字符串中发现<code>Rar!</code></p>\n<p><img src=\"files/aba4262c97eaabfeff3f7fc92bd32b9a.png\"></p>\n<p>3. 手动翻IDA，在<code>.rdata</code>发现<code>flag</code>变量，开头为<code>Rar!</code></p>\n<p><img src=\"files/00b631a5b9f8c6f240abc2e956af2b84.png\"></p>\n<p>综合感觉第一种最有可能</p>\n<p>然后可以直接用WinRAR尝试打开，发现加密了，于是用<code>rar2john + john</code>恢复，执行<code>rar2john hello.exe &gt; hash.john &amp;&amp; john hash.john</code>\n</p>\n<p><img src=\"files/fad02aa3378dee8b42feac804f474c53.png\"></p>\n<p>拿到密码<code>123456</code>后打开rar就是flag啦</p>\n<p><img src=\"files/6480a6ffd95393ce71f1504459747558.png\"></p>\n<h2>出题人视角</h2>\n<p>欸🤓☝️，upx只压缩可执行程序，那我不就把文件放在程序里压缩嘛！</p>\n<pre><code>#include &lt;iostream&gt;\n\nusing namespace std;\n\nconst unsigned char flag[] = {\n    #embed \"flag.rar\"\n};\n\nint main() {\n   cout << \"Hello, World!\" << endl;\n   return 0;\n}</code></pre>\n<p>这里用上C++一个比较新的功能来将文件嵌入，同时加入一个正常的hello world让他更像一个正常程序。</p>\n<p>接下来<code>g++ main.cpp -o hello.exe &amp;&amp; upx hello.exe</code>编译加壳，最后打包进附件即可。</p>\n<p>本来是不想出爆破密码的，但是不加密文件名太明显了，<code>Shift+F12</code>就秒了，于是用上了rar的加密文件名。为了防止爆破不出，特意用的是<code>rockyou.txt</code>的第一个密码（而且刚好全是数字）。\n</p>\n<h2>出题人自评</h2>\n<p>本题算是一种套娃上的创新，之前确实没往upx压缩其他文件的方向考虑，算是跳出思维范式了。</p>\n<p>但是其中有个别步骤可能较难对上脑电波，比如发现exe中嵌了一个rar，使用常见密码爆破，需要有一定经验才能做到丝滑连招一气呵成。</p>",
+    "flag": ["d082a3eef0f7dd39358abf68f028c5d1"]
+}

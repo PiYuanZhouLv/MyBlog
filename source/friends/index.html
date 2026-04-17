@@ -1326,6 +1326,7 @@
             color: var(--color-text);
             font-size: 16px;
             line-height: 1.5;
+            white-space: pre-wrap;
         }
 
         .confirm-modal-content {
@@ -1520,7 +1521,8 @@
     <header class="page-header">
         <button class="button" onclick="location.href = '/';">&lt;返回首页</button>
         <h1 class="page-title">友链抽奖机</h1>
-        <p>点击卡牌开始抽奖，收集所有友链的不同品质版本！<button class="button" onclick="location.href = '/2025/11/04/小站修补琐记/#上线“友链抽奖机”';">制作历程&gt;</button></p>
+        <p>点击卡牌开始抽奖，收集所有友链的不同品质版本！<button class="button"
+                onclick="location.href = '/2025/11/04/小站修补琐记/#上线“友链抽奖机”';">制作历程&gt;</button></p>
     </header>
 
     <!-- 导航标签 - 已修改包含进度条 -->
@@ -1696,8 +1698,8 @@
                 <div class="confirm-modal-icon" id="confirm-icon">⚠</div>
             </div>
             <div class="confirm-modal-actions">
-                <button class="button confirm-modal-button" id="confirm-cancel">取消</button>
                 <button class="button confirm-modal-button" id="confirm-ok">确认</button>
+                <button class="button confirm-modal-button" id="confirm-cancel">取消</button>
             </div>
         </div>
     </div>
@@ -1706,7 +1708,9 @@
     <input type="file" id="import-file" style="display: none;" accept=".json">
 
     <div class="link-needed">
-        <span style="font-size: 1.2em; font-weight: bold">求友链！<span style="font-size: 1.2em; font-weight: bold">求友链！<span style="font-size: 1.2em; font-weight: bold">求友链！</span></span></span>
+        <span style="font-size: 1.2em; font-weight: bold">求友链！<span
+                style="font-size: 1.2em; font-weight: bold">求友链！<span
+                    style="font-size: 1.2em; font-weight: bold">求友链！</span></span></span>
         <div>恳求各位大手子的友链，不论你是大佬还是萌新，都可以来投友链</div>
         <div>工具也可以，原则上只收开源/免费工具</div>
         <div>若要提交友链，请以任意一种方式联系我，并提供以下内容</div>
@@ -1723,10 +1727,22 @@
         <div>如果你想在你的网站上添加我的友链（这不是必要的），下面是一些基本信息</div>
         <table class="bordered" style="max-width: fit-content; font-size: 1em; line-height: 1.5em;">
             <tbody>
-                <tr><td>名称</td><td>圆周率的废纸堆</td></tr>
-                <tr><td>简介</td><td>圆周率的废纸堆，里面或许有你需要的？</td></tr>
-                <tr><td>URL</td><td>https://piyuanzhoulv.github.io/</td></tr>
-                <tr><td>Icon</td><td>https://piyuanzhoulv.github.io/images/logo.png</td></tr>
+                <tr>
+                    <td>名称</td>
+                    <td>圆周率的废纸堆</td>
+                </tr>
+                <tr>
+                    <td>简介</td>
+                    <td>圆周率的废纸堆，里面或许有你需要的？</td>
+                </tr>
+                <tr>
+                    <td>URL</td>
+                    <td>https://piyuanzhoulv.github.io/</td>
+                </tr>
+                <tr>
+                    <td>Icon</td>
+                    <td>https://piyuanzhoulv.github.io/images/logo.png</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -1746,12 +1762,12 @@
             { id: 7, name: "电影评论", url: "https://filmreview.example.com", avatar: "https://picsum.photos/id/31/200/200", description: "电影赏析与评论" },
             { id: 8, name: "健身指南", url: "https://fitnessguide.example.com", avatar: "https://picsum.photos/id/41/200/200", description: "科学健身方法与计划" },
             { id: 9, name: "科技新闻", url: "https://technews.example.com", avatar: "https://picsum.photos/id/48/200/200", description: "最新科技动态与产品评测" },
-            
-            { id: 10, name: "Lochad", url: "https://www.cnblogs.com/Lochad", avatar: "avatar/Lochad.jpg", description: "试图从AI的虎口中夺食的小pwn手～"},
-            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: "https://kanade-chan.top/logo.png", description: "个人技术知识库与学习记录"},
-            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: "https://down.shengz.top/logo.jpg", description: "记录奋进的征程，书写人生的华章。"},
-            { id: 13, name: "CQ的博客", url: "http://www.smg1307.space/", avatar: "avatar/CQ.jpg", description: "逆向小废物"},
-            { id: 14, name: "kasora", url: "https://blog.kasora.cn/", avatar: "https://blog.kasora.cn/h.png", description: "CTFer, Arch Linux user"},
+
+            { id: 10, name: "Lochad", url: "https://www.cnblogs.com/Lochad", avatar: "avatar/Lochad.jpg", description: "试图从AI的虎口中夺食的小pwn手～" },
+            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: "https://kanade-chan.top/logo.png", description: "个人技术知识库与学习记录" },
+            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: "https://down.shengz.top/logo.jpg", description: "记录奋进的征程，书写人生的华章。" },
+            { id: 13, name: "CQ的博客", url: "http://www.smg1307.space/", avatar: "avatar/CQ.jpg", description: "逆向小废物" },
+            { id: 14, name: "kasora", url: "https://blog.kasora.cn/", avatar: "https://blog.kasora.cn/h.png", description: "CTFer, Arch Linux user" },
         ];
 
         // 品质定义和概率权重（已调整概率） - 按稀有度升序排列
@@ -2052,13 +2068,13 @@
                     // };
 
                     let cachedURL;
-                    try{
+                    try {
                         const response = await fetch(friend.avatar);
                         const blob = await response.blob();
                         cachedURL = URL.createObjectURL(blob);
                         console.log(`Cached image ${friend.avatar} => ${cachedURL}`);
-                    }catch(e){
-                        console.warn(`Error occured when caching ${friend.avatar}`+'\n', e);
+                    } catch (e) {
+                        console.warn(`Error occured when caching ${friend.avatar}` + '\n', e);
                         cachedURL = friend.avatar;
                     }
                     imagesLoaded++;
@@ -2387,6 +2403,22 @@
                 updateProgressBars();
             }
         }
+
+        window.addEventListener("hashchange", (evt) => {
+            if (['collection', '#collection'].includes(window.location.hash)) {
+                lotteryPage.classList.remove('active');
+                collectionPage.classList.add('active');
+                document.querySelector('button[data-page="lottery"]').classList.remove('active');
+                document.querySelector('button[data-page="collection"]').classList.add('active');
+                renderCollectionPage();
+                updateProgressBars();
+            } else {
+                lotteryPage.classList.add('active');
+                collectionPage.classList.remove('active');
+                document.querySelector('button[data-page="lottery"]').classList.add('active');
+                document.querySelector('button[data-page="collection"]').classList.remove('active');
+            }
+        })
 
         // 加权随机选择品质
         function getRandomQuality() {
@@ -3097,7 +3129,7 @@
                     lastUpdate: new Date().toISOString(),
                     version: "1.0",
                     friends: {},
-                    friendIds: friends.map(i=>i.id),
+                    friendIds: friends.map(i => i.id),
                     allCollected: false
                 };
                 saveCollectionData();
