@@ -830,6 +830,27 @@
             renderProblemList()
         }));
 
+        let popStateHandle = null;
+        function registerPopStateHandle(handle) {
+            popStateHandle = handle;
+            history.pushState(null, null, '');
+        }
+
+        function cleanupPopStateHandle(){
+            if(popStateHandle){
+                popStateHandle = null;
+                history.go(-1);
+            }
+        }
+
+        window.addEventListener("popstate", ()=>{
+            if(popStateHandle){
+                const handle = popStateHandle;
+                popStateHandle = null;
+                handle();
+            }
+        })
+
         function showConfirm(message, title = '确认', options = {}) {
             return new Promise((resolve) => {
                 confirmTitle.textContent = title;
@@ -862,7 +883,9 @@
                     confirmCancel.removeEventListener('click', handleCancel);
                     confirmModalOverlay.removeEventListener('click', handleOverlayClick);
                     confirmModalOverlay.classList.remove('active');
+                    cleanupPopStateHandle();
                 };
+                registerPopStateHandle(handleCancel);
                 confirmOk.addEventListener('click', handleConfirm);
                 confirmCancel.addEventListener('click', handleCancel);
                 confirmModalOverlay.addEventListener('click', handleOverlayClick);
@@ -899,7 +922,9 @@
                     confirmModalOverlay.classList.remove('active');
                     confirmCancel.style.display = '';
                     confirmOk.textContent = '确定';
+                    cleanupPopStateHandle();
                 };
+                registerPopStateHandle(handleClose);
                 confirmOk.addEventListener('click', handleClose);
                 confirmModalOverlay.addEventListener('click', handleOverlayClick);
             });
@@ -981,6 +1006,7 @@
         let helpOpened = false;
         function openHelp() {
             helpOpened = true;
+            registerPopStateHandle(closeHelp);
             document.getElementById("help-page").classList.add('active');
             document.getElementById("help-page").scrollTop = 0;
             document.getElementById("help-page").animate([{ top: '100vh', opacity: 0 }, { top: '0', opacity: 1 }], { duration: 300, fill: "forwards", easing: "ease-in-out" });
@@ -988,6 +1014,7 @@
 
         function closeHelp() {
             helpOpened = false;
+            cleanupPopStateHandle();
             const pageElem = document.getElementById("help-page");
             if (!pageElem.classList.contains('active')) return;
             pageElem.animate([{ top: '0', opacity: 1 }, { top: '100vh', opacity: 0 }], { duration: 300, fill: "forwards", easing: "ease-in-out" }).finished.then(() => {

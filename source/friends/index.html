@@ -1928,6 +1928,27 @@
             }, 3000);
         }
 
+        let popStateHandle = null;
+        function registerPopStateHandle(handle) {
+            popStateHandle = handle;
+            history.pushState(null, null, '');
+        }
+
+        function cleanupPopStateHandle(){
+            if(popStateHandle){
+                popStateHandle = null;
+                history.go(-1);
+            }
+        }
+
+        window.addEventListener("popstate", ()=>{
+            if(popStateHandle){
+                const handle = popStateHandle;
+                popStateHandle = null;
+                handle();
+            }
+        })
+
         // 确认弹窗函数
         function showConfirm(message, title = '确认', options = {}) {
             return new Promise((resolve) => {
@@ -1972,12 +1993,14 @@
                     confirmCancel.removeEventListener('click', handleCancel);
                     confirmModalOverlay.removeEventListener('click', handleOverlayClick);
                     confirmModalOverlay.classList.remove('active');
+                    cleanupPopStateHandle();
                 };
 
                 // 添加事件监听器
                 confirmOk.addEventListener('click', handleConfirm);
                 confirmCancel.addEventListener('click', handleCancel);
                 confirmModalOverlay.addEventListener('click', handleOverlayClick);
+                registerPopStateHandle(handleCancel);
             });
         }
 
@@ -2022,11 +2045,13 @@
                     confirmModalOverlay.classList.remove('active');
                     confirmCancel.style.display = '';
                     confirmOk.textContent = '确定';
+                    cleanupPopStateHandle();
                 };
 
                 // 添加事件监听器
                 confirmOk.addEventListener('click', handleClose);
                 confirmModalOverlay.addEventListener('click', handleOverlayClick);
+                registerPopStateHandle(handleClose);
             });
         }
 
@@ -2377,10 +2402,12 @@
             // 批量抽奖弹窗关闭
             closeBatchModalBtn.addEventListener('click', () => {
                 batchModalOverlay.classList.remove('active');
+                cleanupPopStateHandle();
             });
             batchModalOverlay.addEventListener('click', (e) => {
                 if (e.target === batchModalOverlay) {
                     batchModalOverlay.classList.remove('active');
+                    cleanupPopStateHandle();
                 }
             });
         }
@@ -2658,6 +2685,7 @@
 
             // 显示弹窗
             batchModalOverlay.classList.add('active');
+            registerPopStateHandle(()=>batchModalOverlay.classList.remove('active'));
             // 确保弹窗内容滚动到顶部
             setTimeout(() => {
                 document.querySelector('.batch-modal-content').scrollTop = 0;
@@ -3026,6 +3054,7 @@
 
             // 显示弹窗
             modalOverlay.classList.add('active');
+            registerPopStateHandle(closeModal);
             requestAnimationFrame(scrollFrame);
             // 确保弹窗内容滚动到顶部
             setTimeout(() => {
@@ -3037,6 +3066,7 @@
         // 关闭弹窗
         function closeModal() {
             modalOverlay.classList.remove('active');
+            cleanupPopStateHandle();
         }
 
         // 一键解锁所有友链（普通品质）
