@@ -74,6 +74,7 @@ toc: true
     (document.querySelector(`input[name=theme-radio][value=${themeSetting}]`)||document.querySelector('input[name=theme-radio][value=auto]')).checked = true;
     function switchThemeTo(colorScheme){
         localStorage.setItem("color-scheme", colorScheme);
+        colorSchemeOpt = colorScheme;
         scheme = colorScheme==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?"night":"light"):colorScheme;
         if(scheme==='light'){
             document.getElementById("sun").style.display = "none";
@@ -99,6 +100,74 @@ toc: true
     })
     document.getElementById("moon").addEventListener("click", ()=>{
         document.querySelector('input[name=theme-radio][value=night]').checked = true;
+    })
+    window.addEventListener("focus", ()=>{
+        document.querySelector(`input[name=theme-radio][value=${localStorage.getItem('color-scheme') || 'auto'}]`).checked = true;
+    })
+</script>
+
+<style>
+    .theme-change-opt {
+        flex: 1;
+        font-size: 1em;
+        padding: 10px;
+        white-space: nowrap;
+        font-family: inherit;
+        color: inherit;
+        border: 2px solid;
+        border-left: none;
+        border-right: none;
+        background: transparent;
+        transition: 0.3s;
+    }
+
+    .theme-change-opt:not(:disabled) {
+        opacity: 0.6;
+        cursor: pointer;
+    }
+
+    .theme-change-opt:not(:disabled):hover {
+        opacity: 1;
+    }
+
+    .theme-change-opt:disabled {
+        color: #077207;
+        background-color: #b4fbb4;
+    }
+
+    .theme-change-opt:nth-child(1) {
+        border-radius: 10px 0 0 10px;
+        border-left: 2px solid;
+    }
+
+    .theme-change-opt:nth-last-child(1) {
+        border-radius: 0 10px 10px 0;
+        border-right: 2px solid;
+    }
+</style>
+
+<fieldset>
+<legend>主题切换动画</legend>
+    <div style="display: flex; flex-wrap: wrap;">
+        <button class="theme-change-opt" value="fancy">使用华丽的切换动画</button>
+        <button class="theme-change-opt" value="plain">使用朴素的切换动画</button>
+        <button class="theme-change-opt" value="media" title="遵循@media (prefers-reduced-motion)的结果">使用媒体查询的选项</button>
+    </div>
+</fieldset>
+
+<script>
+    document.querySelectorAll(".theme-change-opt").forEach(elem => {
+        elem.addEventListener("click", ((elem)=>()=>{
+            localStorage.setItem('reduce-motion', elem.value);
+            document.querySelectorAll(".theme-change-opt").forEach(e=>e.disabled = false);
+            elem.disabled = true;
+        })(elem))
+    })
+    document.querySelector(`.theme-change-opt[value=${localStorage.getItem('reduce-motion')??"media"}]`).disabled = true;
+    
+    window.addEventListener("focus", ()=>{
+        document.querySelectorAll(".theme-change-opt").forEach(e=>e.disabled = false);
+        document.querySelector(`.theme-change-opt[value=${localStorage.getItem('reduce-motion')??"media"}]`).disabled = true;
     })
 </script>
 
@@ -129,6 +198,12 @@ toc: true
         input.addEventListener("change", ((input)=>(()=>{
             switchLogoTo(input.value)
         }))(input))
+    })
+
+    window.addEventListener("focus", ()=>{
+        logoSetting = localStorage.getItem('extra-logo') || 'show';
+        switchLogoTo(logoSetting);
+        (document.querySelector(`input[name=logo-radio][value=${logoSetting}]`)||document.querySelector('input[name=logo-radio][value=show]')).checked = true;
     })
 </script>
 
@@ -164,5 +239,10 @@ toc: true
         input.addEventListener("change", ((input)=>(()=>{
             switchBackTo(input.value)
         }))(input))
+    })
+
+    window.addEventListener("focus", ()=>{
+        backFunc = localStorage.getItem("backbtn-func") || "session";
+        backChoose(backFunc);
     })
 </script>

@@ -41,16 +41,29 @@
         @import url("https://fontsapi.zeoseven.com/293/gb-regular/result.css");
         @import url("https://fontsapi.zeoseven.com/442/main/result.css");
 
-        .night img{
-        opacity: 0.8;
+        .night img {
+            opacity: 0.8;
         }
 
-        img{
-        border: 1px solid;
+        img {
+            border: 1px solid;
         }
 
-        code, pre {
-        font-family: "Maple Mono NF CN", monospace;
+        code,
+        pre {
+            font-family: "Maple Mono NF CN", monospace;
+        }
+
+        ::view-transition-image-pair(root) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none;
+            mix-blend-mode: normal;
+            display: block;
+            transition: none !important;
         }
     </style>
     <style>
@@ -650,8 +663,8 @@
             </svg></button>
     </div>
     <script>
-        colorScheme = localStorage.getItem('color-scheme') || 'auto'
-        colorScheme = colorScheme === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorScheme
+        colorSchemeOpt = localStorage.getItem('color-scheme') || 'auto'
+        colorScheme = colorSchemeOpt === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorSchemeOpt
         if (colorScheme === 'light') {
             document.getElementById("sun").style.display = "none"
             document.getElementById("moon").style.display = ""
@@ -659,7 +672,8 @@
             document.getElementById("sun").style.display = ""
             document.getElementById("moon").style.display = "none"
         }
-        function switchColorScheme(scheme) {
+        function switchColorScheme4Real(scheme) {
+            colorSchemeOpt = scheme
             localStorage.setItem("color-scheme", scheme)
             if (scheme === 'light') {
                 document.getElementById("sun").style.display = "none"
@@ -675,6 +689,54 @@
                 classlist.remove('light')
             }
         }
+        function switchColorScheme(scheme) {
+            prefersReducedMotion = localStorage.getItem('reduce-motion') ? {fancy: false, plain: true, media: matchMedia('(prefers-reduced-motion)').matches}[localStorage.getItem('reduce-motion')] : matchMedia('(prefers-reduced-motion)').matches
+            if (!document.startViewTransition || prefersReducedMotion) {
+                switchColorScheme4Real(scheme)
+                return
+            }
+            const x = innerWidth
+            const y = innerHeight
+            const endRadius = Math.hypot(
+                Math.max(x, innerWidth - x),
+                Math.max(y, innerHeight - y),
+            )
+            document.startViewTransition(() => switchColorScheme4Real(scheme)).ready.then(() => {
+                document.documentElement.animate(
+                    {
+                        clipPath: [
+                            `circle(0 at ${x}px ${y}px)`,
+                            `circle(${endRadius}px at ${x}px ${y}px)`,
+                        ]
+                    },
+                    {
+                        duration: 400,
+                        easing: "ease-in",
+                        pseudoElement: "::view-transition-new(root)",
+                    },
+                );
+            })
+        }
+        window.addEventListener("focus", () => {
+            const newOpt = localStorage.getItem('color-scheme') || 'auto'
+            if (newOpt !== colorSchemeOpt) {
+                colorSchemeOpt = newOpt
+                const scheme = colorSchemeOpt === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorSchemeOpt
+                if (scheme === 'light') {
+                    document.getElementById("sun").style.display = "none"
+                    document.getElementById("moon").style.display = ""
+                    let classlist = document.querySelector("html").classList
+                    classlist.remove('night')
+                    classlist.add('light')
+                } else {
+                    document.getElementById("sun").style.display = ""
+                    document.getElementById("moon").style.display = "none"
+                    let classlist = document.querySelector("html").classList
+                    classlist.add('night')
+                    classlist.remove('light')
+                }
+            }
+        })
     </script>
 
     <div class="toast-container" id="toast-container"></div>
@@ -712,9 +774,10 @@
             </section>
 
             <nav style="display: flex;align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <button onclick="pagecount--; renderProblemList();">Prev</button><div><span
-                    id="current-pagecount"></span>/<span id="total-pagecount"></span>页</div><button
-                    onclick="pagecount++; renderProblemList();">Next</button><div>共<span id="search-count"></span>条结果</div>
+                <button onclick="pagecount--; renderProblemList();">Prev</button>
+                <div><span id="current-pagecount"></span>/<span id="total-pagecount"></span>页</div><button
+                    onclick="pagecount++; renderProblemList();">Next</button>
+                <div>共<span id="search-count"></span>条结果</div>
             </nav>
 
             <div style="height: 60px;"></div>
@@ -737,7 +800,8 @@
             <p>这是每咕一题的主界面，之所以叫每咕一题，是因为圆周率比较懒，大概率不能持续更新，所以就叫每咕一题吧！</p>
             <p>搜索框可以搜索标题/简介，由于圆周率比较懒，只忽略了大小写，然后做全文匹配；tag点击可以切换筛选，这里做了一个小操作，会把全选和全部选等价，也就是说，如果你只想看没做过的题，点击一次“未解出”就好了~</p>
             <p>同一筛选之间采用“或”的逻辑连接，不同筛选之间采取“和”的逻辑连接</p>
-            <p>小彩蛋：每咕一题的标题会根据最后一道题的出题时间变化；部分解出的题目在tag上会显示解出数/总flag数，而不是“部分解出”；当一个标签没有被筛选中的时候会变成灰色，但由于目前的题目都只有一个tag，无法展现这一功能</p>
+            <p>小彩蛋：每咕一题的标题会根据最后一道题的出题时间变化；部分解出的题目在tag上会显示解出数/总flag数，而不是“部分解出”；当一个标签没有被筛选中的时候会变成灰色，但由于目前的题目都只有一个tag，无法展现这一功能
+            </p>
             <p>点击题目卡片即可打开题目，下方还有换页和筛选统计，换页是循环的，你可以通过“Prev”快速到达最后一页</p>
             <hr>
             <figure>
@@ -750,12 +814,17 @@
             <p>第二行是题目的详细描述，可能会对做题有帮助</p>
             <p>第三行是提示，分为提示/spoiler提示/警告三种，spoiler提示与做题思路相关程度较大（星级越高提示量越大，建议越靠后打开），打开时有确认框</p>
             <p>第四行是附件栏，可以点击绿色链接下载附件</p>
-            <p>第五行是服务端附件栏，部分服务端附件是黑盒，将鼠标放上去时会变为红色，点击下载前有弹窗提醒；反之为白盒附件，可以查看分析，你可以找到其中硬编码的flag，但请按正常流程完成解题；后面有默认协议/端口，以及如何运行服务端的提示</p>
+            <p>第五行是服务端附件栏，部分服务端附件是黑盒，将鼠标放上去时会变为红色，点击下载前有弹窗提醒；反之为白盒附件，可以查看分析，你可以找到其中硬编码的flag，但请按正常流程完成解题；后面有默认协议/端口，以及如何运行服务端的提示
+            </p>
             <p>第六行是flag提交栏，你可以在这里看到已解出/总flag数，可以将你找到的flag提交，网页会通过校验md5的方式来确认你是否找到了正确的flag</p>
             <p>第七行是WP栏，你可以在这里看到本题的WP，打开前会有弹窗确认</p>
-            <p>小彩蛋：打开/关闭页面的动画参考了osu!，于是加上了ESC关闭的功能（更像了）；在浏览器失去焦点后，再点击外侧空白区域有500ms/1次的忽略点击操作，这样就不会因为复制flag回来的时候不小心点到外面导致问题页被关闭了~</p>
+            <p>小彩蛋：打开/关闭页面的动画参考了osu!，于是加上了ESC关闭的功能（更像了）；在浏览器失去焦点后，再点击外侧空白区域有500ms/1次的忽略点击操作，这样就不会因为复制flag回来的时候不小心点到外面导致问题页被关闭了~
+            </p>
             <hr>
-            <p>差不多就说到这吧~快按下ESC退出帮助页面开始你的解题之旅吧！更多有关内容可以查看<a href="/2026/02/28/小站修补琐记2/#2026-4-17-每咕一题调试完成上线" style="border: none;">这篇博客</a>或者<a href="https://github.com/PiYuanZhouLv/MyBlog/tree/main/source/problems/index.html" style="border: none;">源代码</a>哦</p>
+            <p>差不多就说到这吧~快按下ESC退出帮助页面开始你的解题之旅吧！更多有关内容可以查看<a href="/2026/02/28/小站修补琐记2/#2026-4-17-每咕一题调试完成上线"
+                    style="border: none;">这篇博客</a>或者<a
+                    href="https://github.com/PiYuanZhouLv/MyBlog/tree/main/source/problems/index.html"
+                    style="border: none;">源代码</a>哦</p>
             <div style="height: 60px;"></div>
         </div>
 
@@ -836,15 +905,15 @@
             history.pushState(null, null, '');
         }
 
-        function cleanupPopStateHandle(){
-            if(popStateHandle){
+        function cleanupPopStateHandle() {
+            if (popStateHandle) {
                 popStateHandle = null;
                 history.go(-1);
             }
         }
 
-        window.addEventListener("popstate", ()=>{
-            if(popStateHandle){
+        window.addEventListener("popstate", () => {
+            if (popStateHandle) {
                 const handle = popStateHandle;
                 popStateHandle = null;
                 handle();
@@ -1354,15 +1423,15 @@
         async function init() {
             problems = await (await fetch('problem-list')).json();
             const pbl = Object.values(problems);
-            const delta = Math.ceil((Date.now() - (new Date(pbl[pbl.length-1]['time']).getTime())) / (1000 * 60 * 60 * 24 * 7));
-            if(delta == 1){
+            const delta = Math.ceil((Date.now() - (new Date(pbl[pbl.length - 1]['time']).getTime())) / (1000 * 60 * 60 * 24 * 7));
+            if (delta == 1) {
                 document.getElementById("title-freq").innerText = '周';
-            }else if(delta<4){
+            } else if (delta < 4) {
                 document.getElementById("title-freq").innerText = `${delta}周`;
-            }else if(delta==4){
+            } else if (delta == 4) {
                 document.getElementById("title-freq").innerText = '月';
-            }else{
-                document.getElementById("title-freq").innerText = ['咕', '🕊'][Math.floor(Math.random()*2)];
+            } else {
+                document.getElementById("title-freq").innerText = ['咕', '🕊'][Math.floor(Math.random() * 2)];
             }
             loadData();
             renderProblemList();

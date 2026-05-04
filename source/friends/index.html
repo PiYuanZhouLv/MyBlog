@@ -39,16 +39,29 @@
         @import url("https://fontsapi.zeoseven.com/293/gb-regular/result.css");
         @import url("https://fontsapi.zeoseven.com/442/main/result.css");
 
-        .night img{
-        opacity: 0.8;
+        .night img {
+            opacity: 0.8;
         }
 
-        img{
-        border: 1px solid;
+        img {
+            border: 1px solid;
         }
 
-        code, pre {
-        font-family: "Maple Mono NF CN", monospace;
+        code,
+        pre {
+            font-family: "Maple Mono NF CN", monospace;
+        }
+
+        ::view-transition-image-pair(root) {
+            isolation: auto;
+        }
+
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none;
+            mix-blend-mode: normal;
+            display: block;
+            transition: none !important;
         }
     </style>
     <style>
@@ -1498,8 +1511,8 @@
             </svg></button>
     </div>
     <script>
-        colorScheme = localStorage.getItem('color-scheme') || 'auto'
-        colorScheme = colorScheme === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorScheme
+        colorSchemeOpt = localStorage.getItem('color-scheme') || 'auto'
+        colorScheme = colorSchemeOpt === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorSchemeOpt
         if (colorScheme === 'light') {
             document.getElementById("sun").style.display = "none"
             document.getElementById("moon").style.display = ""
@@ -1507,7 +1520,8 @@
             document.getElementById("sun").style.display = ""
             document.getElementById("moon").style.display = "none"
         }
-        function switchColorScheme(scheme) {
+        function switchColorScheme4Real(scheme) {
+            colorSchemeOpt = scheme
             localStorage.setItem("color-scheme", scheme)
             if (scheme === 'light') {
                 document.getElementById("sun").style.display = "none"
@@ -1523,6 +1537,54 @@
                 classlist.remove('light')
             }
         }
+        function switchColorScheme(scheme) {
+            prefersReducedMotion = localStorage.getItem('reduce-motion') ? {fancy: false, plain: true, media: matchMedia('(prefers-reduced-motion)').matches}[localStorage.getItem('reduce-motion')] : matchMedia('(prefers-reduced-motion)').matches
+            if (!document.startViewTransition || prefersReducedMotion) {
+                switchColorScheme4Real(scheme)
+                return
+            }
+            const x = innerWidth
+            const y = innerHeight
+            const endRadius = Math.hypot(
+                Math.max(x, innerWidth - x),
+                Math.max(y, innerHeight - y),
+            )
+            document.startViewTransition(() => switchColorScheme4Real(scheme)).ready.then(() => {
+                document.documentElement.animate(
+                    {
+                        clipPath: [
+                            `circle(0 at ${x}px ${y}px)`,
+                            `circle(${endRadius}px at ${x}px ${y}px)`,
+                        ]
+                    },
+                    {
+                        duration: 400,
+                        easing: "ease-in",
+                        pseudoElement: "::view-transition-new(root)",
+                    },
+                );
+            })
+        }
+        window.addEventListener("focus", () => {
+            const newOpt = localStorage.getItem('color-scheme') || 'auto'
+            if (newOpt !== colorSchemeOpt) {
+                colorSchemeOpt = newOpt
+                const scheme = colorSchemeOpt === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? "night" : "light") : colorSchemeOpt
+                if (scheme === 'light') {
+                    document.getElementById("sun").style.display = "none"
+                    document.getElementById("moon").style.display = ""
+                    let classlist = document.querySelector("html").classList
+                    classlist.remove('night')
+                    classlist.add('light')
+                } else {
+                    document.getElementById("sun").style.display = ""
+                    document.getElementById("moon").style.display = "none"
+                    let classlist = document.querySelector("html").classList
+                    classlist.add('night')
+                    classlist.remove('light')
+                }
+            }
+        })
     </script>
     <!-- 页面头部 -->
     <header class="page-header">
@@ -1934,15 +1996,15 @@
             history.pushState(null, null, '');
         }
 
-        function cleanupPopStateHandle(){
-            if(popStateHandle){
+        function cleanupPopStateHandle() {
+            if (popStateHandle) {
                 popStateHandle = null;
                 history.go(-1);
             }
         }
 
-        window.addEventListener("popstate", ()=>{
-            if(popStateHandle){
+        window.addEventListener("popstate", () => {
+            if (popStateHandle) {
                 const handle = popStateHandle;
                 popStateHandle = null;
                 handle();
@@ -2685,7 +2747,7 @@
 
             // 显示弹窗
             batchModalOverlay.classList.add('active');
-            registerPopStateHandle(()=>batchModalOverlay.classList.remove('active'));
+            registerPopStateHandle(() => batchModalOverlay.classList.remove('active'));
             // 确保弹窗内容滚动到顶部
             setTimeout(() => {
                 document.querySelector('.batch-modal-content').scrollTop = 0;
