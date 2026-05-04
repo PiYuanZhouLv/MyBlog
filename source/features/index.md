@@ -151,7 +151,7 @@ toc: true
     <div style="display: flex; flex-wrap: wrap;">
         <button class="theme-change-opt" value="fancy">使用华丽的切换动画</button>
         <button class="theme-change-opt" value="plain">使用朴素的切换动画</button>
-        <button class="theme-change-opt" value="media" title="遵循@media (prefers-reduced-motion)的结果">使用媒体查询的选项</button>
+        <button class="theme-change-opt" value="media" title="遵循@media (prefers-reduced-motion)的结果">使用媒体查询的结果</button>
     </div>
 </fieldset>
 
@@ -209,11 +209,23 @@ toc: true
 
 ## 返回按钮
 
+<style>
+    html.light {
+        --auto-green: #077207;
+    }
+
+    html.night {
+        --auto-green: #b4fbb4;
+    }
+</style>
+
 <fieldset>
 <legend>返回按钮逻辑</legend>
 <label style="display: flex"><input name="backbtn-radio" type="radio" value="session">在<code>sessionStorage</code>中记录返回地址</label>
 <label style="display: flex"><input name="backbtn-radio" type="radio" value="referer">使用<code>Referer</code>作为返回地址</label>
 <label style="display: flex"><input name="backbtn-radio" type="radio" value="history">执行<code>history.back()</code></label>
+<label style="display: flex"><input name="backbtn-radio" type="radio" value="count">计算页内锚点跳转的次数<span style="color: var(--auto-green)">【推荐】</span></label>
+<label style="display: flex"><input name="backbtn-radio" type="radio" value="hook">拦截默认的锚点行为<span style="color: var(--auto-green)">【推荐，新默认值】</span></label>
 <label style="display: flex"><input name="backbtn-radio" type="radio" value="none">我不要这些乱七八糟的功能</label>
 <div id="backbtn-explain" style="margin: 10px; border: 1px solid; padding: 5px"></div>
 </fieldset>
@@ -224,6 +236,8 @@ toc: true
         session: '<span>使用<code>sessionStorage</code>存储访问过的界面以模拟返回按钮</span><br/><span style="color: red">缺点：会在浏览器自带的History里面拉屎，每点一次都会被当成“前进”</span>',
         referer: '<span>使用<code>document.referer</code>作为返回目标</span><br/><span style="color: red">缺点：只能返回一层，若使用了“上一篇”/“下一篇”等功能就会在两个页面来回跳</span>',
         history: '<span>使用<code>History API</code>，与浏览器回退按钮功能一致</span><br/><span style="color: red">缺点：锚点会被当成返回点，使用过目录功能后会在同一个页面上跳来跳去</span>',
+        count: '<span>通过计算在页面上通过锚点跳转了多少次来调用<code>history.go(-1-n)</code></span><br/><span style="color: var(--auto-green)">【推荐使用】如果你需要记录同页面内锚点跳转历史，推荐使用该方案</span>',
+        hook: '<span>通过拦截页内跳转锚点的默认行为，改用<code>history.replaceState</code>避免增加历史条目</span><br/><span style="color:  var(--auto-green)">【推荐使用】如果你不需要记录页内锚点跳转历史，推荐使用该方案</span>',
         none: '<span style="color: red">解决问题的终极方法就是解决提出问题的人/事！</span>'
     }
     function backChoose(opt){

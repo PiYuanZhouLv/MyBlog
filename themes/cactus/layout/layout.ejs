@@ -100,7 +100,29 @@
     </script>
     <script>
       localStorage = localStorage || {getItem: ()=>(undefined)};
-      if((localStorage.getItem("backbtn-func")||"session")==="session"){
+      document.addEventListener("DOMContentLoaded", ()=>{
+        document.querySelectorAll('a[href^="#"]').forEach(elem=>{
+          elem.addEventListener("click", evt=>{
+            if((localStorage.getItem("backbtn-func")||"hook")==="hook"){
+              evt.preventDefault();
+              const anchor = decodeURI(elem.href.slice(elem.href.search('#')));
+              history.replaceState(history.state, null, anchor);
+              document.getElementById(anchor.slice(1)).scrollIntoView({behavior: "smooth"});
+            }
+          })
+        })
+        document.querySelectorAll('a[href^="#"]').forEach(elem=>{
+          elem.addEventListener("click", evt=>{
+            if((localStorage.getItem("backbtn-func")||"hook")!=="hook"){
+              anchorClickCount++;
+            }
+            setTimeout(()=>history.replaceState({anchorClickCount: anchorClickCount}, null, ''), 10);
+          })
+        })
+      })      
+      let anchorClickCount = 0;
+      history.replaceState({anchorClickCount: 0}, null, '');
+      if(localStorage.getItem("backbtn-func")==="session"){
         function pushHistory(url){
           let arr = JSON.parse(sessionStorage.getItem('history') || '[]');
           arr.push(url);
@@ -182,11 +204,18 @@
 
                 case "history":
                   history.back();
-                  break
+                  break;
               
-                default:
+                case "session":
                   sessionStorage.setItem('backing', 1);
                   location.href = popHistory();
+                  break;
+
+                case "count":
+                case "hook":
+                default:
+                  history.go(-1-((history.state || {}).anchorClickCount ?? anchorClickCount ?? 0));
+                  break;
               }
             }
             if(localStorage.getItem("backbtn-func")==="none"){
