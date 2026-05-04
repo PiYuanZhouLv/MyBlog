@@ -116,7 +116,7 @@ toc: true
         color: inherit;
         border: 0px solid;
         background: transparent;
-        transition: 0.3s;
+        transition: all 0.3s, border 0s, border-radius 0s;
     }
 
     .theme-change-opt:not(:disabled) {
