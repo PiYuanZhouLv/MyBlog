@@ -114,9 +114,7 @@ toc: true
         white-space: nowrap;
         font-family: inherit;
         color: inherit;
-        border: 2px solid;
-        border-left: none;
-        border-right: none;
+        border: 0px solid;
         background: transparent;
         transition: 0.3s;
     }
@@ -135,20 +133,39 @@ toc: true
         background-color: #b4fbb4;
     }
 
-    .theme-change-opt:nth-child(1) {
-        border-radius: 10px 0 0 10px;
-        border-left: 2px solid;
+    .theme-change-opt.l {
+        border-left-width: 2px;
+    }
+    .theme-change-opt.t {
+        border-top-width: 2px;
+    }
+    .theme-change-opt.r {
+        border-right-width: 2px;
+    }
+    .theme-change-opt.b {
+        border-bottom-width: 2px;
     }
 
-    .theme-change-opt:nth-last-child(1) {
-        border-radius: 0 10px 10px 0;
-        border-right: 2px solid;
+    .theme-change-opt.l.t {
+        border-top-left-radius: 10px;
+    }
+
+    .theme-change-opt.t.r {
+        border-top-right-radius: 10px;
+    }
+
+    .theme-change-opt.r.b {
+        border-bottom-right-radius: 10px;
+    }
+
+    .theme-change-opt.b.l {
+        border-bottom-left-radius: 10px;
     }
 </style>
 
 <fieldset>
 <legend>主题切换动画</legend>
-    <div style="display: flex; flex-wrap: wrap;">
+    <div id="theme-change-opt-group" style="display: flex; flex-wrap: wrap;">
         <button class="theme-change-opt" value="fancy">使用华丽的切换动画</button>
         <button class="theme-change-opt" value="plain">使用朴素的切换动画</button>
         <button class="theme-change-opt" value="media" title="遵循@media (prefers-reduced-motion)的结果">使用媒体查询的结果</button>
@@ -169,6 +186,32 @@ toc: true
         document.querySelectorAll(".theme-change-opt").forEach(e=>e.disabled = false);
         document.querySelector(`.theme-change-opt[value=${localStorage.getItem('reduce-motion')??"media"}]`).disabled = true;
     })
+
+    function updateBorder() {
+        const container = document.getElementById("theme-change-opt-group");
+        const bigRect = container.getBoundingClientRect();
+        document.querySelectorAll(".theme-change-opt").forEach(elem => {
+            elem.classList.remove("l", "t", "r", "b");
+            const rect = elem.getBoundingClientRect();
+            for(let [ppt, cn] of [['top', 't'], ['right', 'r'], ['bottom', 'b'], ['left', 'l']]){
+                if(Math.abs(bigRect[ppt] - rect[ppt]) < 5){
+                    elem.classList.add(cn);
+                }
+            }
+        })
+    }
+
+    function requestUpdateBorder() {
+        let requested;
+        if(requested){return;}
+        requested = true;
+        requestAnimationFrame(()=>{
+            updateBorder();
+            requested = false;
+        })
+    }
+
+    (new ResizeObserver(updateBorder)).observe(document.getElementById("theme-change-opt-group"));
 </script>
 
 ## Logo
