@@ -1,0 +1,16 @@
+{
+    "desc": "<p>据说是Windows的陈年老bug……</p>\n<br>\n<p>附件是<a href=\"https://veracrypt.io/zh-cn/Home.html\">VeraCrypt</a>容器，密码为<code>123456</code></p>",
+    "attachments": ["strangeNTFS"],
+    "server": [],
+    "tips": {
+        "hint": [
+            "为了保证纯正的bug体验，建议在Windows环境下做题"
+        ],
+        "spoiler": [
+            ["既然是Windows的bug，那……换个OS试试（？）", 3]
+        ],
+        "warning": []
+    },
+    "WP": "<h2>解题过程</h2>\n<p>使用VeraCrypt打开容器，发现只有一个叫<code>.</code>的奇怪文件夹</p>\n<p><img src=\"files/35e51460cc0bc9427f8c0deb284ab021.png\"></p>\n<p>双击打开是一个一摸一样的<code>.</code>！</p>\n<p><img src=\"files/63649a9a9606cff71901790b0dbc5bdf.png\"></p>\n<p>再双击发现<code>flag.txt</code>，但是双击显示：</p>\n<p><img src=\"files/5bbfecbf3da5ba3626cfe498c00192db.png\"></p>\n<p>这不怪了吗，这个文件明明在这里……</p>\n<h2>奇怪の特性</h2>\n<p>下面讲解这个和另外两个奇怪的NTFS特性</p>\n<p>用过Windows的同学可能会知道，Windows里文件夹不能以空格和点结尾，更不可能就叫<code>.</code>(代表当前目录)。如果你仔细观察，会发现这个文件夹实际上是<code>. </code>(尾随空格)</p>\n<p>不出意外的话，通过文件资源管理器是无法创建这样的文件夹的，但是！通过在名字后加上<code>/</code>，md指令就会成功创建这个“不可能”的文件夹</p>\n<p><img src=\"files/de353cf279b5490177c783a5ed66723b.png\"></p>\n<p>这个文件夹的特点是，双击打开后和上一层文件夹一样，再双击就显示其中实际包含的内容，但这些“影子”文件都无法双击打开</p>\n<p><img src=\"files/f3bf79a27becdb46a496c1745b0d94bc.png\"></p>\n<p>同样具有奇特行为的还有以空格和点结尾(至少两个)的文件夹，当存在不含这些结尾的“同名”文件夹时，里面的内容显示的是一样的，但他们本身也可以存储文件，这些文件是不会在文件资源管理器中显示的！</p>\n<p><img src=\"files/c05fd199380f58e5ee0f695ece4591b2.png\"><img src=\"files/a03f9143e5b9c3d483caf6491ac2862b.png\"><img src=\"files/f154e8f687fdad75053a4db7f259ab6e.png\"></p>\n<p>但是在其他应用程序中这就是几个“正常的文件夹”</p>\n<p><img src=\"files/a0f5b0c5f54c0f1375493a9ecbbf4a7a.png\"></p>\n<p>当“同名文件夹”不存在时，尾随空格的就会显示本身的内容，尾随点的就会“无法访问”</p>\n<p><img src=\"files/735f03c8de116099c40ab4c8d1bdeffe.png\"><img src=\"files/2543d038a2ddaf7ee9552145eedd3b47.png\"></p>\n<h2>继续解题</h2>\n<p>所以说了这么多，这道题怎么解呢？</p>\n<p>因为这个特性不影响其他程序，所以我们可以用python读取<code>. /flag.txt</code>，或者干脆<code>notepad \". /flag.txt\"</code>使用记事本打开，再不济往文件资源管理器的地址栏手动拼接一下路径也是可以打开的</p>\n<h2>上天の馈赠：WSL</h2>\n<p>如果说上面的体验让你觉得非常难受，那么不妨试试WSL！WSL通过映射强兼了NTFS文件系统，所以我们可以用WSL在NTFS里面为所欲为！下面看看WSL下这些文件夹的创建和表现</p>\n<p>由于Linux在目录名称上没有这么挑，这些文件夹都是可以直接创建的！（而且可以创建一个尾随点/含有非法字符的文件夹！）</p>\n<p><img src=\"files/56207849f41c58237f0071a0358328ce.png\"></p><p>(问号被替换成了奇怪的字符)</p><p>然后就可以像正常文件夹一样访问/操作他们了，是不是舒服多了~让我们用WSL视角查看一下VeraCrypt容器</p><p><img src=\"files/c8c8fc51f771184a1bbb257fff959465.png\"></p><p>发现了我们的flag.txt和一个回收站的文件，看看flag.txt吧</p><p><img src=\"files/f50926c329b618a94baa31a5aadd0086.png\"></p><p>终于舒服了</p><h2>出题人闲话</h2><p>其实本来是想考查三个特性的，但是VeraCrypt似乎没有尾随空格的特性，然后忘了windows下只能创建至少尾随两个点的文件夹了，所以就只考了<code>. </code></p><p>至于为什么用VeraCrypt呢，是因为用压缩包的话没有这个特性，双击就送flag，而VeraCrypt支持创建NTFS分区的加密卷，并且虚拟文件系统还原度较高，经过尝试发现存在特性就选择了使用VeraCrypt容器传递题目</p><p>至于为什么会占用5MB，回收站里是个啥，我也不清楚辣（x</p>",
+    "flag": ["c25e96dad45146a51a6dbf5dadfed6a3"]
+}

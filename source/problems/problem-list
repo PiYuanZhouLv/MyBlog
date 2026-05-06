@@ -12,7 +12,7 @@
         "flag": 1
     },
     "2": {
-        "name": "osu!flag",
+        "name": "【占位】osu!flag",
         "desc": "圆周率染上osu!了……",
         "tags": ["misc(musc)", "新奇"],
         "diff": {
@@ -24,7 +24,7 @@
         "flag": 2
     },
     "3": {
-        "name": "Have a cup of tea~",
+        "name": "【占位】Have a cup of tea~",
         "desc": "圆周率最近淘回了一个28年前的咖啡机，据说还有远程控制功能(?)",
         "tags": ["misc(musc)", "新奇"],
         "diff": {
@@ -33,6 +33,18 @@
             "综合性": 1
         },
         "time": "2026/4/15",
+        "flag": 1
+    },
+    "4": {
+        "name": "strangeNTFS",
+        "desc": "我不用Windows！",
+        "tags": ["misc(musc)", "新奇"],
+        "diff": {
+            "知识点": 1,
+            "小巧思": 3,
+            "综合性": 0
+        },
+        "time": "2026/5/7",
         "flag": 1
     }
 }
