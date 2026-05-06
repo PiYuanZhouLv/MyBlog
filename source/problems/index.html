@@ -1218,7 +1218,7 @@
         async function showProblem(pid) {
             if (!problems[pid]) return hideProblem();
             if (currentDisplayedPid === pid && document.getElementById("problem-page").classList.contains('active')) return;
-            const detail = await (await fetch(`problem-details/${pid}`)).json();
+            const detail = await (await fetch(`problem-details/${pid}`, {cache: "no-store"})).json();
             problemDetail = detail;
             problemDetail.pid = pid;
             document.getElementById("problem-page").innerHTML = `
@@ -1422,7 +1422,7 @@
         let problems;
         let pagecount = 0;
         async function init() {
-            problems = await (await fetch('problem-list')).json();
+            problems = await (await fetch('problem-list', {cache: "no-store"})).json();
             const pbl = Object.values(problems);
             const delta = Math.ceil((Date.now() - (new Date(pbl[pbl.length - 1]['time']).getTime())) / (1000 * 60 * 60 * 24 * 7));
             if (delta == 1) {
