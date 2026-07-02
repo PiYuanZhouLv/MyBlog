@@ -1476,6 +1476,10 @@
         .bordered td {
             border: 1px solid;
         }
+
+        .circle {
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -1794,7 +1798,7 @@
     <div class="link-needed">
         <span style="font-size: 1.2em; font-weight: bold">++我？</span>
         <div>如果你想在你的网站上添加我的友链（这不是必要的），下面是一些基本信息</div>
-        <table class="bordered" style="max-width: fit-content; font-size: 1em; line-height: 1.5em;">
+        <table class="bordered" style="max-width: fit-content; font-size: 1em; line-height: 1.5em; user-select: text">
             <tbody>
                 <tr>
                     <td>名称</td>
@@ -1833,10 +1837,10 @@
             { id: 9, name: "科技新闻", url: "https://technews.example.com", avatar: "https://picsum.photos/id/48/200/200", description: "最新科技动态与产品评测" },
 
             { id: 10, name: "Lochad", url: "http://lochad.top/", avatar: "avatar/Lochad.jpg", description: "试图从AI的虎口中夺食的小pwn手～" },
-            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: "https://kanade-chan.top/logo.png", description: "个人技术知识库与学习记录" },
-            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: "https://down.shengz.top/logo.jpg", description: "记录奋进的征程，书写人生的华章。" },
+            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: "https://kanade-chan.top/logo.png", description: "个人技术知识库与学习记录", extra: ["circle"] },
+            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: "https://down.shengz.top/logo.jpg", description: "记录奋进的征程，书写人生的华章。", extra: ["circle"] },
             { id: 13, name: "CQ的博客", url: "http://www.smg1307.space/", avatar: "avatar/CQ.jpg", description: "逆向小废物" },
-            { id: 14, name: "kasora", url: "https://blog.kasora.cn/", avatar: "https://blog.kasora.cn/h.png", description: "CTFer, Arch Linux user" },
+            { id: 14, name: "kasora", url: "https://blog.kasora.cn/", avatar: "https://blog.kasora.cn/h.png", description: "CTFer, Arch Linux user", extra: ["circle"] },
         ];
 
         // 品质定义和概率权重（已调整概率） - 按稀有度升序排列
@@ -2005,6 +2009,14 @@
 
         window.addEventListener("popstate", () => {
             if (popStateHandle) {
+                const handle = popStateHandle;
+                popStateHandle = null;
+                handle();
+            }
+        })
+
+        window.addEventListener("keydown", (evt) => {
+            if (popStateHandle && evt.key === "Escape"){
                 const handle = popStateHandle;
                 popStateHandle = null;
                 handle();
@@ -2842,6 +2854,8 @@
 
             // 更新卡牌内容 - 使用缓存图片
             cardImg.src = friend.avatar;
+            cardImg.className = 'card-image';
+            cardImg.classList.add(...(friend.extra??[]));
             cardName.textContent = friend.name;
             cardDesc.textContent = friend.description;
 
@@ -2933,7 +2947,7 @@
                 // 卡片内容
                 friendCard.innerHTML = `
                     <div class="friend-header">
-                        <img class="friend-avatar" src="${friend.avatar}" alt="${friend.name}" loading="lazy" draggable="false">
+                        <img class="friend-avatar ${(friend.extra??[]).join(' ')}" src="${friend.avatar}" alt="${friend.name}" loading="lazy" draggable="false">
                         <div class="friend-info">
                             <div class="friend-name">${hasObtained ? friend.name : '？？？'}</div>
                             <div class="friend-desc">${hasObtained ? friend.description : '尚未抽到该友链'}</div>
@@ -3065,6 +3079,8 @@
 
             // 设置弹窗内容
             modalAvatar.src = friend.avatar;
+            modalAvatar.className = 'modal-avatar';
+            modalAvatar.classList.add(...(friend.extra??[]));
             modalTitle.textContent = hasObtained ? friend.name : '？？？';
             modalDescription.textContent = hasObtained ? friend.description : '尚未抽到该友链';
 
