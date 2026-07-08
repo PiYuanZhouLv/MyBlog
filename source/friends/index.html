@@ -3094,14 +3094,14 @@
             function scrollFrame(timestamp) {
                 if (!lasttime) {
                     lasttime = timestamp;
-                    scrollLeft = -urlText.clientWidth;
+                    scrollLeft = -urlText.clientWidth * 0.5;
                 }
                 const delta = timestamp - lasttime;
                 lasttime = timestamp;
                 scrollLeft += delta * 0.1;
                 urlText.scrollLeft = scrollLeft;
                 if (scrollLeft >= urlText.scrollWidth) {
-                    scrollLeft = -urlText.clientWidth;
+                    scrollLeft = -urlText.clientWidth * 0.5;
                 }
                 if (modalOverlay.classList.contains("active")) {
                     requestAnimationFrame(scrollFrame);
