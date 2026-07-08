@@ -2548,13 +2548,18 @@
 
         // 开始抽奖
         let canStart = true;
-        function startLottery() {
+        async function startLottery() {
             if (!canStart || isDrawing) return;
 
             // 使用一次抽奖次数
             if (!useLotteryCount(1)) {
                 showToast('抽奖次数不足', 'error');
                 return;
+            }
+
+            if(lotteryCard.style.transform && lotteryCard.style.transform != 'rotateY(0deg)'){
+                await lotteryCard.animate([{}, {transform: "rotateY(0deg)"}], {duration: 300, easing: "cubic-bezier(.48,1.59,.64,1)"}).finished;
+                lotteryCard.style.transform = "rotateY(0deg)";
             }
 
             isDrawing = true;
