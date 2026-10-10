@@ -10,8 +10,8 @@ tags:
 
 [Week1.pdf](非校内新生_Week1_圆周率_wp.pdf)
 
-[Week2.pdf](非校内新生_Week1_圆周率_wp.pdf)
+[Week2.pdf](非校内新生_Week2_圆周率_wp.pdf)
 
-[Week3.pdf](非校内新生_Week1_圆周率_wp.pdf)
+[Week3.pdf](非校内新生_Week3_圆周率_wp.pdf)
 
-[Week4.pdf](非校内新生_Week1_圆周率_wp.pdf)
+[Week4.pdf](非校内新生_Week4_圆周率_wp.pdf)
