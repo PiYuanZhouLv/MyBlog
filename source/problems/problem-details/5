@@ -1,0 +1,15 @@
+{
+    "desc": "<p>圆周率说：“MIneCraft和MIsC有亿点点像，就像fUNctION和UNION一样，所以身为misc手，必须会玩MC！”</p>\n<p>于是，圆周率把《华强买flag》的flag用MC藏起来了，结果到了比赛前夕，圆周率发现《华强买flag》实在是太不好出了，他灵机一动，把藏有flag的MC存档传到平台了，这样misc就不会少题目了！快说谢谢圆周率！</p>\n<p>注：本题使用的Minecraft版本为<code>Java 26.3</code></p>",
+    "attachments": ["misc_is_minecraft.zip"],
+    "server": [],
+    "tips": {
+        "hint": [
+            "你说运行起来太慢了？没关系，我们可以使出<del>天堂制造</del>，不对不对，串场了，总之就是使出一个原版就有的咒语，可以调节时间流速，变慢变快随君意！",
+            "圆周率说，flag用到的字符种类太多，全部做到键盘上实在是太麻烦了……有了！把flag hex一下就好了！"
+        ],
+        "spoiler": [],
+        "warning": []
+    },
+    "WP": "<p>本题WP已已文章形式发布，</p>\n<p>WP请移步<a href=\"/2026/10/14/TSCTF-J2026-MisC-出题人WP/\">这里</a></p>\n<p>出题人反思请移步<a href=\"/2026/10/14/TSCTF-J2026-圆周率の出题人反思/#MisC\">这里</a></p>",
+    "flag": ["7099cded8ef2011bd3ea358a73804836"]
+}

@@ -1,0 +1,16 @@
+{
+    "desc": "<p>给博客搬家了的圆周率最近很开心，似乎有什么不为人知的小秘密……</p>\n<p>为了找出这个小秘密，天璇Merak战队集齐CTF五大方向糕手连夜成立专案组进行调查，获得了以下情报：</p>\n<p><code>captured.pcapng</code> - 截获的部分网络流量</p>\n<p><code>TOTP_App.exe</code> - 一个生成一次性验证码的程序</p>\n<p>misc is everything, everything is misc. 你能突出重围，找到flag吗？</p>\n<p><i>注：本题不需要社会工程学/所给附件及容器以外的情报</i></p>",
+    "attachments": ["captured.pcapng", "TOTP_App.exe"],
+    "server": [
+        ["MiscEverythingUp - Servers.rar", "解压容器文件，在docker-compose同级文件夹运行“docker compose up”，若5000端口被占用，可以将compose中的5000:5000改为<PORT>:5000并通过127.0.0.1:<PORT>访问", "HTTP 127.0.0.1:5000", true]
+    ],
+    "tips": {
+        "hint": [
+            "专案组说，圆周率太狡猾了！扮misc出全栈！我们 5大方向轮番上阵，把所有附件都用 上才解决！容器实在是伪装得太好了，一开始根本用不上！"
+        ],
+        "spoiler": [],
+        "warning": []
+    },
+    "WP": "<p>本题WP已已文章形式发布，</p>\n<p>WP请移步<a href=\"/2026/10/14/TSCTF-J2026-MiscEverythingUp-出题人WP/\">这里</a></p>\n<p>出题人反思请移步<a href=\"/2026/10/14/TSCTF-J2026-圆周率の出题人反思/#MiscEverythingUp\">这里</a></p>",
+    "flag": ["e2037994edb6f3bc7bf8037cd1346c8b"]
+}

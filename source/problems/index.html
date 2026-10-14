@@ -456,11 +456,16 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            gap: 20px;
+            gap: 0 20px;
+            flex-wrap: wrap;
         }
 
         .problem-card>*:nth-child(1)>*:nth-child(1) {
             font-size: 1.5em;
+        }
+
+        .problem-card>*:nth-child(1)>*:nth-child(2) {
+            margin-left: auto;
         }
 
         .problem-card>*:nth-child(2) {
@@ -470,6 +475,7 @@
         .problem-card>*:nth-child(3) {
             grid-area: c;
             border: none;
+            margin: auto;
         }
 
         .problem-card>*:nth-child(4) {
@@ -771,7 +777,7 @@
                 <div id="desc-tags" class="tag-list"></div>
             </section>
 
-            <section id="problem-list" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+            <section id="problem-list" style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); justify-content: center;">
             </section>
 
             <nav style="display: flex;align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;">
@@ -860,6 +866,7 @@
             { name: "all-in", hue: 0 },
             { name: "基础", hue: 133 },
             { name: "纯史", hue: 0 },
+            { name: "TSCTF-J2026", hue: 246},
         ]
 
         const confirmModalOverlay = document.getElementById('confirm-modal-overlay');
@@ -1395,6 +1402,9 @@
                 }
             }
             if (newProblem.length) {
+                if(delProblem.length) {
+                    await new Promise((resolve)=>setTimeout(resolve, 10));
+                }
                 await showAlert(`上新了 ${newProblem.length} 题(包含新增flag)，快去看看吧！`, "上新提醒", ';)', 'Go!Go!Go!');
                 solveData['completed'] = false;
             }
