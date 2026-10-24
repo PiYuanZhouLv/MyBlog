@@ -274,7 +274,7 @@ toc: true
 </fieldset>
 
 <script>
-    var backFunc = localStorage.getItem("backbtn-func") || "session";
+    var backFunc = localStorage.getItem("backbtn-func") || "hook";
     const backExplain = {
         session: '<span>使用<code>sessionStorage</code>存储访问过的界面以模拟返回按钮</span><br/><span style="color: red">缺点：会在浏览器自带的History里面拉屎，每点一次都会被当成“前进”</span>',
         referer: '<span>使用<code>document.referer</code>作为返回目标</span><br/><span style="color: red">缺点：只能返回一层，若使用了“上一篇”/“下一篇”等功能就会在两个页面来回跳</span>',

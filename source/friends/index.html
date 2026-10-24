@@ -134,7 +134,7 @@
             color: var(--color-text);
             line-height: 1.5;
             padding: 20px;
-            max-width: 1200px;
+            max-width: max(1200px, 80vw);
             margin: 0 auto;
         }
 
@@ -757,7 +757,7 @@
         /* 品质统计 */
         .quality-stats {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
             /* margin-top: auto; */
         }
 
@@ -810,8 +810,8 @@
 
         .modal {
             background-color: var(--color-background);
-            width: 90%;
-            max-width: 800px;
+            max-width: min(max(800px, 60vw), 90vw);
+            min-width: min(800px, 90vw);
             max-height: 90vh;
             display: flex;
             border-radius: 0;
@@ -820,7 +820,7 @@
         }
 
         .modal-left {
-            flex: 1;
+            flex: 0;
             padding: 30px;
             display: flex;
             flex-direction: column;
@@ -838,7 +838,7 @@
         }
 
         .modal-right {
-            flex: 1.5;
+            flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -933,7 +933,7 @@
             }
 
             .friends-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             }
 
             .controls {
