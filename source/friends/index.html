@@ -2156,6 +2156,10 @@
                 }
                 const blob = await response.blob();
                 const cachedURL = URL.createObjectURL(blob);
+                if(!await testImageExist(cachedURL)){
+                    console.warn(`${url} seems returned something can't be displayed...` + '\n', blob.type);
+                    return null;
+                }
                 console.log(`Cached image ${url} => ${cachedURL}`);
                 return cachedURL;
             } catch (e) {
