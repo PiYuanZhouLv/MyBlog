@@ -490,8 +490,7 @@
         }
 
         .problem-card:hover {
-            transform: scale(1.05);
-            transform-origin: center;
+            box-shadow: inset 0 0 5px 2px;
             transition: all 0.2s;
             cursor: pointer;
         }
@@ -510,6 +509,10 @@
             border-bottom: none;
         }
 
+        #problem-maincontent>*:nth-child(n+1) {
+            overflow-x: auto;
+        }
+
         #problem-maincontent>*:nth-last-child(1) {
             border-bottom: 1px solid;
         }
@@ -517,6 +520,8 @@
         #problem-maincontent>*:nth-child(1)>*:nth-child(1) {
             display: flex;
             flex-direction: column;
+            max-width: 100%;
+            flex-wrap: wrap-reverse;
         }
 
         #problem-maincontent>*:nth-child(1) {
@@ -534,6 +539,8 @@
 
         #problem-maincontent>*:nth-child(1)>*:nth-child(1)>*:nth-child(1)>*:nth-child(1) {
             font-size: 1.5em;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         #problem-maincontent>*:nth-child(2) {
@@ -766,7 +773,7 @@
             </header>
 
             <section
-                style="border: 1px solid; padding: 10px; display: flex; justify-content: space-evenly; flex-wrap: wrap; align-items: center; max-width: fit-content; gap: 10px; margin: 0 20px;">
+                style="border: 1px solid; padding: 10px; display: flex; justify-content: space-evenly; flex-wrap: wrap; align-items: center; max-width: fit-content; gap: 10px;">
                 <label>搜索：<input id="search"></label>
                 <div id="solve-tags" class="tag-list">
                     <span class="tag" style="--hue: 158">已解出</span>
@@ -777,7 +784,7 @@
                 <div id="desc-tags" class="tag-list"></div>
             </section>
 
-            <section id="problem-list" style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); justify-content: center; width: 100%; padding: 0 20px;">
+            <section id="problem-list" style="display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); justify-content: center; width: 100%;">
             </section>
 
             <nav style="display: flex;align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;">
