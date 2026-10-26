@@ -1825,29 +1825,29 @@
     <script>
         // 在 friends 数组中添加 id 字段
         const friends = [
-            { id: 0, name: "技术博客，但是博客名字特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别长", url: "https://techblog.example.com/test/for/a/long/long/long/long/long/long/url", avatar: "https://picsum.photos/id/0/200/200", description: "分享编程技术和开发经验，但是我需要测试特别特别特别特别特别特别特别特别特别长的介绍" },
-            { id: 1, name: "设计笔记", url: "https://designnotes.example.com", avatar: "https://picsum.photos/id/1/200/200", description: "UI/UX设计心得与资源" },
-            { id: 2, name: "旅行日志", url: "https://travelog.example.com", avatar: "https://picsum.photos/id/10/200/200", description: "记录世界各地的旅行见闻" },
-            { id: 3, name: "美食日记", url: "https://foodiary.example.com", avatar: "https://picsum.photos/id/20/200/200", description: "探索与分享美食文化" },
-            { id: 4, name: "读书俱乐部", url: "https://bookclub.example.com", avatar: "https://picsum.photos/id/24/200/200", description: "阅读分享与书评交流" },
-            { id: 5, name: "摄影空间", url: "https://photospace.example.com", avatar: "https://picsum.photos/id/26/200/200", description: "摄影作品展示与技巧分享" },
-            { id: 6, name: "音乐分享", url: "https://musicbox.example.com", avatar: "https://picsum.photos/id/29/200/200", description: "发现好音乐，分享听歌心得" },
-            { id: 7, name: "电影评论", url: "https://filmreview.example.com", avatar: "https://picsum.photos/id/31/200/200", description: "电影赏析与评论" },
-            { id: 8, name: "健身指南", url: "https://fitnessguide.example.com", avatar: "https://picsum.photos/id/41/200/200", description: "科学健身方法与计划" },
-            { id: 9, name: "科技新闻", url: "https://technews.example.com", avatar: "https://picsum.photos/id/48/200/200", description: "最新科技动态与产品评测" },
+            { id: 0, name: "技术博客，但是博客名字特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别特别长", url: "https://techblog.example.com/test/for/a/long/long/long/long/long/long/url", avatar: ["https://picsum.photos/id/0/200/200", "/avatar/test/0.jpg"], description: "分享编程技术和开发经验，但是我需要测试特别特别特别特别特别特别特别特别特别长的介绍" },
+            { id: 1, name: "设计笔记", url: "https://designnotes.example.com", avatar: ["https://picsum.photos/id/1/200/200", "/avatar/test/1.jpg"], description: "UI/UX设计心得与资源" },
+            { id: 2, name: "旅行日志", url: "https://travelog.example.com", avatar: ["https://picsum.photos/id/10/200/200", "/avatar/test/2.jpg"], description: "记录世界各地的旅行见闻" },
+            { id: 3, name: "美食日记", url: "https://foodiary.example.com", avatar: ["https://picsum.photos/id/20/200/200", "/avatar/test/3.jpg"], description: "探索与分享美食文化" },
+            { id: 4, name: "读书俱乐部", url: "https://bookclub.example.com", avatar: ["https://picsum.photos/id/24/200/200", "/avatar/test/4.jpg"], description: "阅读分享与书评交流" },
+            { id: 5, name: "摄影空间", url: "https://photospace.example.com", avatar: ["https://picsum.photos/id/26/200/200", "/avatar/test/5.jpg"], description: "摄影作品展示与技巧分享" },
+            { id: 6, name: "音乐分享", url: "https://musicbox.example.com", avatar: ["https://picsum.photos/id/29/200/200", "/avatar/test/6.jpg"], description: "发现好音乐，分享听歌心得" },
+            { id: 7, name: "电影评论", url: "https://filmreview.example.com", avatar: ["https://picsum.photos/id/31/200/200", "/avatar/test/7.jpg"], description: "电影赏析与评论" },
+            { id: 8, name: "健身指南", url: "https://fitnessguide.example.com", avatar: ["https://picsum.photos/id/41/200/200", "/avatar/test/8.jpg"], description: "科学健身方法与计划" },
+            { id: 9, name: "科技新闻", url: "https://technews.example.com", avatar: ["https://picsum.photos/id/48/200/200", "/avatar/test/9.jpg"], description: "最新科技动态与产品评测" },
 
-            { id: 10, name: "Lochad", url: "http://lochad.top/", avatar: "avatar/Lochad.jpg", description: "试图从AI的虎口中夺食的小pwn手～" },
-            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: "https://kanade-chan.top/logo.png", description: "个人技术知识库与学习记录", extra: ["circle"] },
-            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: "https://down.shengz.top/logo.jpg", description: "记录奋进的征程，书写人生的华章。", extra: ["circle"] },
-            { id: 13, name: "CQ的博客", url: "http://www.smg1307.space/", avatar: "https://www.smg1307.space/assets/avatar.jpg", description: "逆向小废物" },
-            { id: 14, name: "kasora", url: "https://blog.kasora.cn/", avatar: "https://blog.kasora.cn/h.png", description: "CTFer, Arch Linux user", extra: ["circle"] },
-            { id: 15, name: "wanwan博客", url: "https://blog.3w3.asia/", avatar: "avatar/wanwan.jpg", description: "虽然明天的事我已非常知晓"},
-            { id: 16, name: "Miso", url: "https://miso2233.github.io/", avatar: "avatar/Miso.png", description: "CTF-web选手&Agent开发"},
-            { id: 17, name: "yuanmuyan的博客", url: "https://yuanmuyan.github.io/", avatar: "https://yuanmuyan.github.io/images/logo.png", description: "web手一枚~，欢迎各位师傅的参观~"},
-            { id: 18, name: "kioroshiaki", url: "https://kioroshiaki.github.io", avatar: "https://kioroshiaki.github.io/img/blowfish_logo_hu_81700eacd4516d13.png", description: "Burning Love!!!!!", extra: ["circle"]},
-            { id: 19, name: "dalang的博客", url: "https://xiaolang0817.github.io/personal_blog/", avatar: "avatar/dalang.webp", description: "本网页是写着玩的,不定时更新,里面可能会有我半夜发疯想的东西和一些记录啥啥啥的"},
-            { id: 20, name: "Ch0kk4ku's Blog", url: "https://ch0kk4ku.github.io/", avatar: "avatar/ch0kk4ku.png", description: "有趣有盼，无灾无难。"},
-            { id: 21, name: "Map1e-Suk1的秘密基地", url: "https://map1e-suk1.github.io/", avatar: "https://map1e-suk1.github.io/avatar.webp", description: "Roam free, for life is wide."},
+            { id: 10, name: "Lochad", url: "http://lochad.top/", avatar: ["avatar/Lochad.jpg"], description: "试图从AI的虎口中夺食的小pwn手～" },
+            { id: 11, name: "KanaDE的小册子", url: "https://kanade-chan.top/", avatar: ["https://kanade-chan.top/logo.png", "avatar/kanade.png"], description: "个人技术知识库与学习记录", extra: ["circle"] },
+            { id: 12, name: "圣赵的HomePage", url: "https://www.shengz.top/", avatar: ["https://down.shengz.top/logo.jpg", "avatar/shengz.jpg"], description: "记录奋进的征程，书写人生的华章。", extra: ["circle"] },
+            { id: 13, name: "CQ的博客", url: "http://www.smg1307.space/", avatar: ["https://www.smg1307.space/assets/avatar.jpg", "avatar/CQ.jpg"], description: "逆向小废物" },
+            { id: 14, name: "kasora", url: "https://blog.kasora.cn/", avatar: ["avatar/kasora.jpeg"], description: "CTFer, Arch Linux user", extra: ["circle"] },
+            { id: 15, name: "wanwan博客", url: "https://blog.3w3.asia/", avatar: ["avatar/wanwan.jpg"], description: "虽然明天的事我已非常知晓"},
+            { id: 16, name: "Miso", url: "https://miso2233.github.io/", avatar: ["avatar/Miso.png"], description: "CTF-web选手&Agent开发"},
+            { id: 17, name: "yuanmuyan的博客", url: "https://yuanmuyan.github.io/", avatar: ["https://yuanmuyan.github.io/images/logo.png", "avatar/yuanmuyan.png"], description: "web手一枚~，欢迎各位师傅的参观~"},
+            { id: 18, name: "kioroshiaki", url: "https://kioroshiaki.github.io", avatar: ["https://kioroshiaki.github.io/img/blowfish_logo_hu_81700eacd4516d13.png", "avatar/koi_aki.png"], description: "Burning Love!!!!!", extra: ["circle"]},
+            { id: 19, name: "dalang的博客", url: "https://xiaolang0817.github.io/personal_blog/", avatar: ["avatar/dalang.webp"], description: "本网页是写着玩的,不定时更新,里面可能会有我半夜发疯想的东西和一些记录啥啥啥的"},
+            { id: 20, name: "Ch0kk4ku's Blog", url: "https://ch0kk4ku.github.io/", avatar: ["https://ch0kk4ku.github.io/assets/images/avatar.avif", "avatar/ch0kk4ku.png"], description: "有趣有盼，无灾无难。"},
+            { id: 21, name: "Map1e-Suk1的秘密基地", url: "https://map1e-suk1.github.io/", avatar: ["https://map1e-suk1.github.io/avatar.png", "avatar/Maple.png"], description: "Roam free, for life is wide."},
         ];
 
         // 品质定义和概率权重（已调整概率） - 按稀有度升序排列
@@ -2136,6 +2136,49 @@
             });
         }
 
+        function testImageExist(url, timeout = 3000) {
+            return new Promise(resolve => {
+                const img = new Image();
+                const timer = setTimeout(() => { cleanup(); resolve(false); }, timeout);
+                const cleanup = () => { clearTimeout(timer); img.onload = img.onerror = null; img.src = ''; };
+                img.onload = () => { cleanup(); resolve(true); };
+                img.onerror = () => { cleanup(); resolve(false); };
+                img.src = url;
+            });
+        }
+
+        async function getBlobOrExternal(url) {
+            try {
+                const response = await fetch(url);
+                if(!response.ok){
+                    console.warn(`Try to get ${url} but not ok.` + '\n', response);
+                    return null;
+                }
+                const blob = await response.blob();
+                const cachedURL = URL.createObjectURL(blob);
+                console.log(`Cached image ${url} => ${cachedURL}`);
+                return cachedURL;
+            } catch (e) {
+                console.warn(`Error occured when caching ${url}` + '\n', e);
+                if(await testImageExist(url)){
+                    return url;
+                }else{
+                    console.warn(`${url} seems not exists, fallback...`);
+                    return null;
+                }
+            }
+        }
+
+        async function resolveAvatarFallback(avatars) {
+            for(let url of avatars){
+                let resolved = await getBlobOrExternal(url);
+                if(resolved){
+                    return resolved;
+                }
+            }
+            return avatars[avatars.length-1];
+        }
+
         // 预加载图片
         function preloadImages() {
             return new Promise((resolve) => {
@@ -2180,16 +2223,7 @@
                     //     }
                     // };
 
-                    let cachedURL;
-                    try {
-                        const response = await fetch(friend.avatar);
-                        const blob = await response.blob();
-                        cachedURL = URL.createObjectURL(blob);
-                        console.log(`Cached image ${friend.avatar} => ${cachedURL}`);
-                    } catch (e) {
-                        console.warn(`Error occured when caching ${friend.avatar}` + '\n', e);
-                        cachedURL = friend.avatar;
-                    }
+                    let cachedURL = await resolveAvatarFallback(friend.avatar);
                     imagesLoaded++;
                     updateLoadingProgress();
                     friend.avatar = cachedURL;
@@ -2198,9 +2232,9 @@
                             loadingOverlay.style.opacity = '0';
                             setTimeout(() => {
                                 loadingOverlay.style.display = 'none';
-                                resolve();
                             }, 300);
                         }, 500);
+                        resolve();
                     }
                 });
             });
@@ -2427,6 +2461,9 @@
             loadLotteryCountData();
             setupEventListeners();
 
+            // 预加载图片
+            await preloadImages();
+
             // 渲染页面
             renderCollectionPage();
             updateProgressBars();
@@ -2440,9 +2477,6 @@
             if (hash === 'lottery' || hash === 'collection') {
                 switchPage(hash);
             }
-
-            // 预加载图片
-            await preloadImages();
         }
 
         // 设置事件监听器
